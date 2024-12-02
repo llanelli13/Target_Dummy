@@ -1,4 +1,3 @@
-// src/components/GunDetails.jsx
 import React from "react";
 
 const GunDetails = ({ gun, onClose }) => {

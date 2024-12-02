@@ -4,7 +4,7 @@ import InfoBox from '../components/InfoBox';
 
 const ShotScreen = () => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Message de bienvenue */}
       <div className="bg-gray-700 p-4 rounded-lg">
         <p>Bonjour {`{Username}`} !</p>
@@ -19,7 +19,7 @@ const ShotScreen = () => {
         </div>
 
         {/* Composants d’informations */}
-        <div className="space-y-5">
+        <div className="flex flex-col space-y-5 md:w-1/3">
           <InfoBox icon="🎯" title="Précision" value="...%" />
           <InfoBox icon="🏹" title="Vitesse" value="... m/s" />
           <InfoBox icon="📐" title="Angle" value="...°" />

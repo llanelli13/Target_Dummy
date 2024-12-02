@@ -1,4 +1,3 @@
-// src/components/GunCard.jsx
 import React from "react";
 
 const GunCard = ({ gun, onClick }) => {

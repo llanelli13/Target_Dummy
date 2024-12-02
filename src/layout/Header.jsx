@@ -12,14 +12,14 @@ const Header = () => {
     <header className="flex justify-between items-center bg-teal-500 p-4 rounded-b-lg">
       <div className="flex items-center space-x-2">
         <img src="/Logo.png" alt="Logo" className="h-14" />
-        <span className="text-white font-bold text-lg">Smart Target</span>
+        <span className="text-white font-bold text-lg">Target Dummy</span>
       </div>
 
       {/* Navigation */}
       <nav className="flex items-center space-x-4">
          <div className="flex gap-2"> {/* ou ca  : p-1.5 items-center justify-end border border-black rounded-full bg-gray-400/25 ?*/}
           <Link
-            to="/" // Lien vers la page du tir
+            to="/" 
             className={`px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 ease-in-out ${
               selectedButton === "Votre tir" ? "bg-gray-700 text-white" : "bg-transparent text-black"
             } hover:bg-gray-700 hover:text-white`}
@@ -28,7 +28,7 @@ const Header = () => {
             Votre tir
           </Link>
           <Link
-            to="/armory" // Lien vers la page des armes
+            to="/armory"
             className={`px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 ease-in-out ${
               selectedButton === "Nos armes" ? "bg-gray-700 text-white" : "bg-transparent text-black"
             } hover:bg-gray-700 hover:text-white`}
@@ -37,7 +37,7 @@ const Header = () => {
             Nos armes
           </Link>
           <Link
-            to="/history" // Lien vers la page de l'historique
+            to="/history"
             className={`px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 ease-in-out ${
               selectedButton === "Historique" ? "bg-gray-700 text-white" : "bg-transparent text-black"
             } hover:bg-gray-700 hover:text-white`}
