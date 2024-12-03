@@ -1,13 +1,29 @@
-import React from 'react';
+import React from "react";
 
-const SearchBar = () => {
+const SearchBar = ({ filterType, onTypeChange }) => {
   return (
-    <div className="flex space-x-2 bg-gray-700 p-2 rounded-full w-full max-w-md">
+    <div className="flex items-center space-x-2 bg-gray-700 p-2 rounded-full w-1/2">
+
+      {/* Liste déroulante pour filtrer par type */}
+      <select
+        value={filterType}
+        onChange={(e) => onTypeChange(e.target.value)}
+        className="bg-gray-600 text-white rounded-full px-2 py-2 focus:outline-none"
+      >
+        <option value="">Tous les types</option>
+        <option value="Fusil d'assaut">Fusil d'assaut</option>
+        <option value="Arme de poing">Arme de poing</option>
+        <option value="Sniper">Sniper</option>
+      </select>
+
+      {/* Champ de recherche */}
       <input
         type="text"
         placeholder="Une arme en particulier ... ?"
-        className="w-full bg-transparent text-white placeholder-white focus:outline-none rounded-full px-4 py-2"
+        className="w-full bg-transparent text-white placeholder-white focus:outline-none rounded-full"
       />
+
+      {/* Bouton de recherche */}
       <button className="bg-teal-500 text-white p-2 rounded-full hover:bg-teal-600">
         <svg
           xmlns="http://www.w3.org/2000/svg"

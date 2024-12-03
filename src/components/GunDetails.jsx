@@ -2,26 +2,46 @@ import React from "react";
 
 const GunDetails = ({ gun, onClose }) => {
   return (
-    <div className="fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-lg w-11/12 md:w-3/4 lg:w-1/2">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-white bg-red-500 rounded-full p-2 hover:bg-red-600 transition"
-        >
-          X
-        </button>
-        <div className="flex flex-col items-center">
-          <img src={gun.image} alt={gun.name} className="h-48 w-48 object-cover rounded-md" />
-          <h2 className="text-2xl font-bold mt-4">{gun.name}</h2>
-          <p className="mt-2 text-gray-700">{gun.description}</p>
-          <div className="mt-4">
-            <h3 className="text-lg font-semibold">Informations</h3>
-            <ul className="list-disc pl-6 text-gray-600">
-              <li>Calibre: {gun.caliber}</li>
-              <li>Poids: {gun.weight} kg</li>
-              <li>Vitesse: {gun.speed} m/s</li>
-            </ul>
+    <div className="fixed inset-0 flex justify-center items-center z-50">
+      <div className="bg-gray-800 text-white p-4 rounded-3xl w-2/6 h-1/2 flex flex-col">
+        <div className="flex flex-row justify-between h-1/2">
+          {/* Vidéo à gauche */}
+          <div className="w-1/2 h-full bg-gray-700 rounded-2xl overflow-hidden">
+            <video
+              className="w-full h-full object-cover"
+              autoPlay
+              loop
+              muted
+              controls
+            >
+              <source src={gun.video || "/BANGER4.mp4"} type="video/mp4" />
+              Votre navigateur ne supporte pas la lecture vidéo.
+            </video>
           </div>
+
+          {/* Contenu texte à droite */}
+          <div className="w-1/2 flex flex-col pl-6">
+            <div className="flex justify-center items-center relative">
+              <h2 className="text-2xl font-semibold mb-2">{gun.name}</h2>
+              {/* Le bouton x est positionné absolument en haut à droite */}
+              <button
+                onClick={onClose}
+                className="absolute top-0 right-0 bg-red-500 text-white p-2 rounded-full hover:bg-red-600"
+              >
+                x
+              </button>
+            </div>
+            <p className="text-sm text-gray-300 mt-5">{gun.description}</p>
+          </div>
+        </div>
+
+        {/* Informations sur l'arme */}
+        <div className="h-1/2">
+          <ul className="space-y-1 text-sm mt-10">
+            <li className="text-lg">Calibre : {gun.caliber}</li>
+            <li className="text-lg">Poids : {gun.weight} kg</li>
+            <li className="text-lg">Vitesse : {gun.speed} m/s</li>
+          </ul>
         </div>
       </div>
     </div>

@@ -6,7 +6,7 @@ const ShotScreen = () => {
   return (
     <div className="space-y-5">
       {/* Message de bienvenue */}
-      <div className="bg-gray-700 p-4 rounded-lg">
+      <div className="bg-gray-700 p-4 rounded-2xl">
         <p>Bonjour {`{Username}`} !</p>
         <p>La cible n’attend que toi... Prépare-toi et tire !</p>
       </div>

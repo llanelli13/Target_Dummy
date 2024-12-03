@@ -1,17 +1,22 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 
 const Header = () => {
   const [selectedButton, setSelectedButton] = useState("Votre tir");
+  const location = useLocation();
+
+
+  if (location.pathname === '/') return null
 
   const handleButtonClick = (buttonName) => {
     setSelectedButton(buttonName);
   };
 
   return (
-    <header className="flex justify-between items-center bg-teal-500 p-4 rounded-b-lg">
+    <header className="flex justify-between items-center bg-teal-500 p-4 rounded-b-2xl">
       <Link
-        to="/"
+        to="/shot"
         className="flex items-center space-x-2"
         onClick={() => handleButtonClick("Votre tir")}
       >
@@ -23,7 +28,7 @@ const Header = () => {
       <nav className="flex items-center space-x-4">
         <div className="flex gap-2">
           <Link
-            to="/"
+            to="/shot"
             className={`px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 ease-in-out ${
               selectedButton === "Votre tir"
                 ? "bg-gray-700 text-white"
