@@ -1,40 +1,53 @@
-import { useState } from 'react';
-import EditableField from '../components/EditableField';
-import { useTranslation } from 'react-i18next';
+import { useState } from "react";
+import EditableField from "../components/EditableField";
+import { useTranslation } from "react-i18next";
 
 const ProfilePage = () => {
-  const { t, i18n } = useTranslation(); // i18n est récupéré ici via useTranslation
-  const [name, setName] = useState('Prénom NOM');
-  const [email, setEmail] = useState('prenom.nom@gmail.com');
+  const { t, i18n } = useTranslation();
+  const [language, setLanguage] = useState(i18n.language || "en"); // Langue active
 
-  const handleNameSave = (newName) => setName(newName);
-  const handleEmailSave = (newEmail) => setEmail(newEmail);
-
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng); // Change la langue
+  const toggleLanguage = () => {
+    const newLang = language === "fr" ? "en" : "fr";
+    setLanguage(newLang);
+    i18n.changeLanguage(newLang); // Change la langue
   };
 
   return (
     <div className="p-6 space-y-6 relative">
-      {/* Positionnement du switch de langue en haut à droite */}
-      <div className="absolute top-4 right-4 flex space-x-4">
-        <button
-          onClick={() => changeLanguage('fr')}
-          className="bg-gray-800 text-white px-4 py-2 rounded-full hover:bg-gray-700"
+      {/* Switch de langue positionné en haut à droite */}
+      <div className="absolute top-4 right-4">
+        <div
+          onClick={toggleLanguage}
+          className="flex items-center bg-gray-800 w-36 h-10 rounded-full cursor-pointer relative"
         >
-          {t('français')}
-        </button>
-        <button
-          onClick={() => changeLanguage('en')}
-          className="bg-gray-800 text-white px-4 py-2 rounded-full hover:bg-gray-700"
-        >
-          {t('english')}
-        </button>
+          {/* Bouton coulissant */}
+          <div
+            className={`absolute top-1 w-16 h-8 bg-white rounded-full shadow-md transition-transform duration-300 ${
+              language === "fr" ? "translate-x-1" : "translate-x-20"
+            }`}
+          ></div>
+          {/* Label Français */}
+          <span
+            className={`flex-1 text-center text-sm font-medium ${
+              language === "fr" ? "text-white" : "text-gray-500"
+            }`}
+          >
+            {t("français")}
+          </span>
+          {/* Label English */}
+          <span
+            className={`flex-1 text-center text-sm font-medium ${
+              language === "en" ? "text-white" : "text-gray-500"
+            }`}
+          >
+            {t("english")}
+          </span>
+        </div>
       </div>
 
       {/* Photo de profil et nom */}
       <div className="flex items-center">
-        <div className='flex-shrink-0 relative'>
+        <div className="flex-shrink-0 relative">
           <img
             src="https://imgs.search.brave.com/F8b10aLZNcq9daadBDD7wTtw4F-4kLsnwZlhyHet6M8/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9zMy56/ZXJvY2hhbi5uZXQv/MjQwLzIwLzI3LzM1/MDM4NzAuanBn"
             alt="Profile"
@@ -42,18 +55,18 @@ const ProfilePage = () => {
           />
         </div>
         <span className="text-2xl text-white bg-gray-800 px-4 py-2 rounded-r-full -ml-2">
-          {name}
+          {t("name")}
         </span>
       </div>
 
       {/* Champs modifiables */}
-      <EditableField label={t('name')} value={name} onSave={handleNameSave} />
-      <EditableField label={t('email')} value={email} onSave={handleEmailSave} />
+      <EditableField label={t("name")} value="Prénom NOM" onSave={() => {}} />
+      <EditableField label={t("email")} value="prenom.nom@gmail.com" onSave={() => {}} />
 
       {/* Bouton de suppression */}
       <div>
         <button className="bg-red-600 text-white px-6 py-2 rounded-full hover:bg-red-700">
-          {t('delete_history')} {/* Traduction pour supprimer l'historique */}
+          {t("delete_history")}
         </button>
       </div>
     </div>

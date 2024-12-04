@@ -8,6 +8,8 @@ const EditableField = ({ label, value, onSave }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState(value);
 
+  console.log('label :', label, 'value:', value, "onSave :", onSave)
+
   const handleSave = () => {
     setIsEditing(false);
     onSave(inputValue);
