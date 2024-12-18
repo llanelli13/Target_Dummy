@@ -11,7 +11,7 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 flex justify-between items-center bg-teal-500 p-4 rounded-b-2xl z-100">
+    <header className="sticky top-0 flex justify-between items-center bg-tan p-4 rounded-b-2xl z-1000">
       <Link
         to="/shot"
         className="flex items-center space-x-2"
@@ -28,9 +28,9 @@ const Header = () => {
             to="/shot"
             className={`px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 ease-in-out ${
               selectedButton === "Votre tir"
-                ? "bg-gray-700 text-white"
+                ? "bg-darkGray text-white"
                 : "bg-transparent text-black"
-            } hover:bg-gray-700 hover:text-white`}
+            } hover:bg-darkGray hover:text-white`}
             onClick={() => handleButtonClick("Votre tir")}
           >
             {t('your_shot')}
@@ -40,9 +40,9 @@ const Header = () => {
             to="/armory"
             className={`px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 ease-in-out ${
               selectedButton === "Nos armes"
-                ? "bg-gray-700 text-white"
+                ? "bg-darkGray text-white"
                 : "bg-transparent text-black"
-            } hover:bg-gray-700 hover:text-white`}
+            } hover:bg-darkGray hover:text-white`}
             onClick={() => handleButtonClick("Nos armes")}
           >
             {t('armory')}
@@ -52,9 +52,9 @@ const Header = () => {
             to="/history"
             className={`px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 ease-in-out ${
               selectedButton === "Historique"
-                ? "bg-gray-700 text-white"
+                ? "bg-darkGray text-white"
                 : "bg-transparent text-black"
-            } hover:bg-gray-700 hover:text-white`}
+            } hover:bg-darkGray hover:text-white`}
             onClick={() => handleButtonClick("Historique")}
           >
             {t('history')}

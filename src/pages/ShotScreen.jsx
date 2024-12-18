@@ -1,3 +1,4 @@
+import TargetComponent from '../components/TargetComponent';
 import VideoComponent from '../components/VideoComponent';
 import InfoBox from '../components/InfoBox';
 import { useTranslation } from 'react-i18next';
@@ -5,11 +6,19 @@ import { useTranslation } from 'react-i18next';
 const ShotScreen = () => {
   const { t } = useTranslation();
 
+  // Exemple de données de tirs : impacts sur chaque cible
+  const sampleImpacts1 = [{ x: 50, y: 50 }, { x: 30, y: 70 }];
+  const sampleImpacts2 = [{ x: 60, y: 40 }, { x: 20, y: 80 }];
+  const sampleImpacts3 = [{ x: 10, y: 90 }];
+  const sampleImpacts4 = [{ x: 70, y: 30 }, { x: 50, y: 50 }];
+
   return (
     <div className="space-y-6">
       {/* Message de bienvenue */}
-      <div className="bg-gray-700 p-4 rounded-2xl">
-        <p>{t('welcome')} {`{Username}`} !</p>
+      <div className="bg-darkGray p-4 rounded-2xl text-white">
+        <p>
+          {t('welcome')} {`{Username}`} !
+        </p>
       </div>
 
       {/* Contenu principal */}
@@ -21,11 +30,19 @@ const ShotScreen = () => {
 
         {/* Composants d’informations */}
         <div className="flex flex-col space-y-6 md:w-1/3">
-          <InfoBox icon="🎯" titleKey="precision" value="...%" />
-          <InfoBox icon="🏹" titleKey="speed" value="... m/s" />
-          <InfoBox icon="📐" titleKey="angle" value="...°" />
-          <InfoBox icon="⭐" titleKey="score" value=".../5" />
+          <InfoBox icon="🎯" titleKey="precision" value="79%" />
+          <InfoBox icon="🏹" titleKey="speed" value="300 m/s" />
+          <InfoBox icon="📐" titleKey="angle" value="210°" />
+          <InfoBox icon="⭐" titleKey="score" value="3.9/5" />
         </div>
+      </div>
+
+      {/* Affichage des cibles */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <TargetComponent impacts={sampleImpacts1} />
+        <TargetComponent impacts={sampleImpacts2} />
+        <TargetComponent impacts={sampleImpacts3} />
+        <TargetComponent impacts={sampleImpacts4} />
       </div>
     </div>
   );

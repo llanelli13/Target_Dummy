@@ -26,7 +26,7 @@ const SearchBar = ({ filterType, onTypeChange }) => {
       />
 
       {/* Bouton de recherche */}
-      <button className="bg-teal-500 text-white p-2 rounded-full hover:bg-teal-600">
+      <button className="bg-tan text-white p-2 rounded-full">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
