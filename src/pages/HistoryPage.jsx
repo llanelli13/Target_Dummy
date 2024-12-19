@@ -4,7 +4,7 @@ import GunDetails from "../components/GunDetails";
 import { useTranslation } from 'react-i18next';
 
 const HistoryPage = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("history");
   const [selectedGun, setSelectedGun] = useState(null);
   const [filterType, setFilterType] = useState("");
   const [searchQuery, setSearchQuery] = useState("");

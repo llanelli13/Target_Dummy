@@ -3,7 +3,7 @@ import EditableField from "../components/EditableField";
 import { useTranslation } from "react-i18next";
 
 const ProfilePage = () => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation("profile");
   const [language, setLanguage] = useState(i18n.language || "en"); // Langue active
 
   const toggleLanguage = () => {

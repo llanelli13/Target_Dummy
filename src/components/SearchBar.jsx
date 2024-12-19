@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 const SearchBar = ({ filterType, onTypeChange }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("armory");
 
   return (
     <div className="flex items-center space-x-2 bg-gray-700 p-2 rounded-full w-1/2">

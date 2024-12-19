@@ -2,7 +2,7 @@ import VideoComponent from "./VideoComponent";
 import { useTranslation } from 'react-i18next';
 
 const GunDetails = ({ gun, onClose }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("armory");
 
   return (
     <div className="fixed inset-0 flex justify-center items-center z-50">

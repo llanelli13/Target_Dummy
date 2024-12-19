@@ -1,0 +1,14 @@
+{
+    "reliable_assault_rifle": "A reliable assault rifle",
+    "reliable_sniper":"A deadly sniper",
+    "reliable_pistol":"Semi-automatic pistol",
+    "type_filter": "All types",
+    "assault_rifle": "Assault Rifle",
+    "pistol": "Pistol",
+    "sniper": "Sniper",
+    "caliber": "Caliber",
+    "weight": "Weight",
+    "speed": "Speed",
+    "details": "Details",
+    "search_bar": "A weapon in particular...?"
+}

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 const GunCard = ({ gun, onClick }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("armory");
 
   return (
     <div className="bg-gray-800 text-white rounded-3xl p-4 hover:shadow-md hover:shadow-tan hover:shadow-lg transition cursor-pointer" onClick={onClick}>

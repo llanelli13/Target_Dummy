@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 const Header = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('layout');
   const [selectedButton, setSelectedButton] = useState("Votre tir");
 
   const handleButtonClick = (buttonName) => {
