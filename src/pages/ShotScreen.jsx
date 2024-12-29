@@ -4,6 +4,7 @@ import InfoBox from '../components/InfoBox';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import SessionComponent from '../components/SessionComponent';
+import UnityPlayer from '../components/UnityPlayer';
 
 const ShotScreen = () => {
   const { t } = useTranslation("shot");
@@ -21,9 +22,9 @@ const ShotScreen = () => {
 
   return (
     <div>
-      <div className={`space-y-6 ${!OpenSession ? "blur-sm pointer-events-none" : ""}`}>
+      <div className={`space-y-6 ${OpenSession ? "blur-sm pointer-events-none" : ""}`}>
         {/* Message de bienvenue */}
-        <div className="bg-darkGray p-4 rounded-2xl text-white">
+        <div className="bg-primaryBrown p-4 rounded-2xl text-black font-bold font-secondary text-lg">
           <p>
             {t('welcome')} {`{Username}`} !
           </p>
@@ -33,11 +34,11 @@ const ShotScreen = () => {
         <div className="flex flex-col md:flex-row gap-6">
           {/* Composant Vidéo */}
           <div className="flex-grow w-2/3 h-auto">
-            <VideoComponent />
+            <UnityPlayer />
           </div>
 
           {/* Composants d’informations */}
-          <div className="flex flex-col space-y-6 md:w-1/3">
+          <div className="flex flex-col space-y-6 md:w-1/3 bg-primaryBrown rounded-2xl p-6">
             <InfoBox icon="🎯" titleKey="precision" value="79%" />
             <InfoBox icon="🏹" titleKey="speed" value="300 m/s" />
             <InfoBox icon="📐" titleKey="angle" value="210°" />
@@ -53,7 +54,7 @@ const ShotScreen = () => {
           <TargetComponent impacts={sampleImpacts4} />
         </div> */}
       </div>
-      {!OpenSession && (<SessionComponent onClose={handleCloseDetails}/>)}
+      {/* {!OpenSession && (<SessionComponent onClose={handleCloseDetails}/>)} */}
     </div>
   );
 };

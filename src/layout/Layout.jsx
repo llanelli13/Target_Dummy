@@ -8,7 +8,7 @@ const Layout = ({ children }) => {
   const location = useLocation();
 
   return (
-    <div className="flex flex-col bg-gray-900 text-white min-h-screen">
+    <div className="flex flex-col bg-primaryDark text-white min-h-screen">
       {location.pathname === "/" ? <LoginPage /> : 
       <>
         <Header />

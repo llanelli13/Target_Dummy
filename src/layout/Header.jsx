@@ -11,26 +11,26 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 flex justify-between items-center bg-tan p-4 rounded-b-2xl z-1000">
+    <header className="sticky top-0 flex justify-between items-center bg-primaryBrown p-4 rounded-b-2xl z-1000">
       <Link
         to="/shot"
         className="flex items-center space-x-2"
         onClick={() => handleButtonClick("Votre tir")}
       >
-        <img src="/Logo.png" alt="Logo" className="h-14" />
-        <span className="text-white font-bold text-lg">Target Dummy</span>
+        <img src="/Logo.png" alt="Logo" className="h-16" />
+        <span className="text-black font-bold font-title text-2xl">Target Dummy</span>
       </Link>
 
       {/* Navigation */}
       <nav className="flex items-center space-x-4">
-        <div className="flex gap-2">
+        <div className="flex gap-2 bg-primaryPale rounded-3xl p-2">
           <Link
             to="/shot"
-            className={`px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 ease-in-out ${
+            className={`px-4 py-2 rounded-full text-sm transition-all duration-300 ease-in-out ${
               selectedButton === "Votre tir"
-                ? "bg-darkGray text-white"
+                ? "bg-primaryBrown text-black font-bold"
                 : "bg-transparent text-black"
-            } hover:bg-darkGray hover:text-white`}
+            } hover:bg-primaryBrown hover:font-bold`}
             onClick={() => handleButtonClick("Votre tir")}
           >
             {t('your_shot')}
@@ -38,11 +38,11 @@ const Header = () => {
           </Link>
           <Link
             to="/armory"
-            className={`px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 ease-in-out ${
+            className={`px-4 py-2 rounded-full text-sm transition-all duration-300 ease-in-out ${
               selectedButton === "Nos armes"
-                ? "bg-darkGray text-white"
+                ? "bg-primaryBrown text-black font-bold"
                 : "bg-transparent text-black"
-            } hover:bg-darkGray hover:text-white`}
+            } hover:bg-primaryBrown hover:font-bold`}
             onClick={() => handleButtonClick("Nos armes")}
           >
             {t('armory')}
@@ -50,11 +50,11 @@ const Header = () => {
           </Link>
           <Link
             to="/history"
-            className={`px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 ease-in-out ${
+            className={`px-4 py-2 rounded-full text-sm transition-all duration-300 ease-in-out ${
               selectedButton === "Historique"
-                ? "bg-darkGray text-white"
+                ? "bg-primaryBrown text-black font-bold"
                 : "bg-transparent text-black"
-            } hover:bg-darkGray hover:text-white`}
+            } hover:bg-primaryBrown hover:font-bold`}
             onClick={() => handleButtonClick("Historique")}
           >
             {t('history')}
@@ -63,14 +63,20 @@ const Header = () => {
         </div>
 
         {/* Bouton de profil cliquable */}
-        <Link to="/profile" onClick={() => handleButtonClick("Profil")}>
+        <Link
+          to="/profile"
+          className={`flex items-center justify-center rounded-full p-1 transition-all duration-300 ease-in-out ${
+            selectedButton === "Profil" ? "bg-primaryPale text-black" : "text-white"
+          }`}
+          onClick={() => handleButtonClick("Profil")}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth="1.5"
             stroke="currentColor"
-            className="h-6 w-6 text-white"
+            className="h-10 w-10"
           >
             <path
               strokeLinecap="round"

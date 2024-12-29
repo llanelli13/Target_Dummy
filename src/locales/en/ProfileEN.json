@@ -3,5 +3,6 @@
     "english": "English",
     "name": "Name",
     "email": "Email",
-    "delete_history": "Delete history"
+    "delete_history": "Delete history",
+    "stats_weapon": "Weapons statistics"
 }

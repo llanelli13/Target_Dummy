@@ -35,10 +35,10 @@ const SessionComponent = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 flex justify-center items-center z-50">
-      <div className="bg-lightBeige text-white p-4 rounded-3xl w-1/2 h-1/4 flex flex-col relative">
+      <div className="bg-primaryBrown text-white p-4 rounded-3xl w-1/2 h-1/4 flex flex-col relative border-4 border-secondaryPale">
         {/* Header section */}
         <div className="flex justify-between items-center h-1/4">
-          <h2 className="text-2xl font-semibold mb-2 text-black">{t('new_session')}</h2>
+          <h2 className="text-3xl font-bold font-title mb-2 text-black">{t('new_session')}</h2>
         </div>
 
         {/* Form content */}
@@ -47,14 +47,14 @@ const SessionComponent = ({ onClose }) => {
           <div className="flex justify-center items-center space-x-4 w-full mb-4">
             {/* Mode de tir dropdown */}
             <div className="w-1/3">
-              <label htmlFor="modeTir" className="block text-lg text-black mb-2">
+              <label htmlFor="modeTir" className="block text-lg font-title font-semibold text-black mb-2">
                 {t('shot_mode')}
               </label>
-              <select
+              <select 
                 id="modeTir"
                 value={modeTir}
                 onChange={(e) => setModeTir(e.target.value)}
-                className="bg-gray-600 text-white rounded-full px-2 py-2 focus:outline-none w-full"
+                className="bg-primaryPale text-black font-title font-semibold rounded-full px-2 py-2 focus:outline-none w-full"
               >
                 <option value="Tir standard">Tir Standard</option>
                 <option value="Tir Interactif">Tir Interactif</option>
@@ -63,14 +63,14 @@ const SessionComponent = ({ onClose }) => {
 
             {/* Arme dropdown */}
             <div className="w-1/3">
-              <label htmlFor="arme" className="block text-lg text-black mb-2">
+              <label htmlFor="arme" className="block text-lg font-title font-semibold text-black mb-2">
                 {t('weapon')}
               </label>
               <select
                 id="arme"
                 value={arme}
                 onChange={(e) => setArme(e.target.value)}
-                className="bg-gray-600 text-white rounded-full px-2 py-2 focus:outline-none w-full"
+                className="bg-primaryPale text-black font-title font-semibold rounded-full px-2 py-2 focus:outline-none w-full"
               >
                 <option value="M4A4">M4A4</option>
                 <option value="Glock">Glock</option>
@@ -83,7 +83,7 @@ const SessionComponent = ({ onClose }) => {
           <div className="absolute bottom-4 right-4">
             <button
               type="submit"
-              className="bg-pastelBlue text-white px-4 py-2 rounded-full hover:bg-blue-600"
+              className="bg-primaryPale text-black font-semibold font-secondary px-4 py-2 rounded-full hover:bg-secondaryPale"
             >
               {t("start")}
             </button>
@@ -91,7 +91,7 @@ const SessionComponent = ({ onClose }) => {
         </form>
 
         {/* Bottom section with current time */}
-        <div className="absolute bottom-4 left-4 text-black">
+        <div className="absolute bottom-4 left-4 text-black font-secondary font-semibold">
           <p>{currentTime}</p>
         </div>
       </div>

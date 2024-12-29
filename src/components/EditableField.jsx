@@ -16,7 +16,7 @@ const EditableField = ({ label, value, onSave }) => {
   };
 
   return (
-    <div className="flex items-center gap-4 md:w-1/2">
+    <div className="flex items-center gap-4 w-2/3">
       {isEditing ? (
         <input
           type="text"
@@ -25,7 +25,7 @@ const EditableField = ({ label, value, onSave }) => {
           className="flex-1 bg-gray-700 text-white rounded-full px-4 py-2 focus:outline-none"
         />
       ) : (
-        <span className="flex-1 text-white bg-gray-800 rounded-full px-4 py-2">
+        <span className="flex-1 text-white bg-primaryBrown rounded-full px-4 py-2">
           {value}
         </span>
       )}
