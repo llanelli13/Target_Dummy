@@ -4,5 +4,8 @@
     "speed": "Vitesse",
     "angle": "Angle",
     "score": "Score",
-    "endSession": "Fin de session"
+    "endSession": "Fin de session",
+    "heart": "Coeur",
+    "stomach": "Ventre",
+    "head": "Tête"
 }

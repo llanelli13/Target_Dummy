@@ -1,35 +1,35 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+
 
 const TargetComponent = ({ impacts }) => {
-  // impacts : tableau d'objets contenant { x, y } pour chaque point d'impact
+  const { t } = useTranslation('shot');
 
   return (
-    <div className="relative w-40 h-40 flex justify-center items-center">
-      {/* SVG de la cible */}
+    <div className="relative w-32 h-32 bg-white rounded-full border-2 border-primaryDark flex items-center justify-center">
       <svg
-        className="absolute w-full h-full"
-        viewBox="0 0 100 100"
+        viewBox="-50 -50 100 100"
+        className="w-full h-full"
         xmlns="http://www.w3.org/2000/svg"
       >
-        {/* Cercles concentriques pour la cible */}
-        <circle cx="50" cy="50" r="48" stroke="black" strokeWidth="1" fill="none" />
-        <circle cx="50" cy="50" r="38" stroke="black" strokeWidth="1" fill="none" />
-        <circle cx="50" cy="50" r="28" stroke="black" strokeWidth="1" fill="none" />
-        <circle cx="50" cy="50" r="18" stroke="black" strokeWidth="1" fill="none" />
-        <circle cx="50" cy="50" r="8" stroke="black" strokeWidth="1" fill="none" />
-      </svg>
+        {/* Cercles de la cible */}
+        <circle cx="0" cy="0" r="50" fill="#f5f5f5" stroke="#000" strokeWidth="1" />
+        <circle cx="0" cy="0" r="40" fill="#e0e0e0" stroke="#000" strokeWidth="1" />
+        <circle cx="0" cy="0" r="30" fill="#c0c0c0" stroke="#000" strokeWidth="1" />
+        <circle cx="0" cy="0" r="20" fill="#a0a0a0" stroke="#000" strokeWidth="1" />
+        <circle cx="0" cy="0" r="10" fill="#808080" stroke="#000" strokeWidth="1" />
 
-      {/* Points d'impact */}
-      {impacts.map((impact, index) => (
-        <div
-          key={index}
-          className="absolute w-2 h-2 bg-red-600 rounded-full"
-          style={{
-            left: `calc(${impact.x}% - 4px)`, // Centrage horizontal du point
-            top: `calc(${impact.y}% - 4px)`, // Centrage vertical du point
-          }}
-        ></div>
-      ))}
+        {/* Impacts */}
+        {impacts.map((impact, index) => (
+          <circle
+            key={index}
+            cx={impact.x}
+            cy={impact.y}
+            r="2"
+            fill="red"
+          />
+        ))}
+      </svg>
     </div>
   );
 };

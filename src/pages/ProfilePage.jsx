@@ -17,7 +17,7 @@ const ProfilePage = () => {
     <div className="relative">
       <div className="p-10">
         {/* Switch de langue positionné en haut à droite */}
-        <div className="absolute top-4 right-4">
+        <div className="absolute top-4 right-0">
           <div
             onClick={toggleLanguage}
             className="flex items-center bg-primaryBrown w-36 h-10 rounded-full cursor-pointer relative"
@@ -73,6 +73,7 @@ const ProfilePage = () => {
             {t("delete_history")}
           </button>
         </div>
+
         <ProfileStats />
       </div>
     </div>

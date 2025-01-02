@@ -20,9 +20,13 @@ const LoginPage = () => {
   return (
     <div 
       className="h-screen flex flex-col justify-center items-center bg-cover bg-center bg-no-repeat text-white" 
-      style={{ backgroundImage: `url('background.jpg')` }} // Remplacez "your-image.jpg" par le nom de votre image
+      style={{ backgroundImage: `url('background.jpg')` }} 
     >
-      <h1 className="text-9xl font-title font-bold">Bienvenue</h1>
+      <div>
+        <img src="/Logo.png" alt="Logo" className="h-48" />
+      </div>
+      
+      <h1 className="text-9xl font-title font-bold -mt-12">Target Dummy</h1>
       <p className="mt-2 text-2xl font-secondary">Rejoignez l'expérience de tir ultime</p>
 
       <div className="bg-primaryBrown bg-opacity-70 p-8 rounded-2xl mt-8 shadow-lg w-96">

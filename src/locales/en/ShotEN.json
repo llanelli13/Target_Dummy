@@ -4,5 +4,8 @@
     "speed": "Speed",
     "angle": "Angle",
     "score": "Score",
-    "endSession": "End session"
+    "endSession": "End session",
+    "heart": "Heart",
+    "stomach": "Stomach",
+    "head": "Head"
 }
