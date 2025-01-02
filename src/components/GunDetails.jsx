@@ -17,7 +17,7 @@ const GunDetails = ({ gun, onClose }) => {
         <div className="flex flex-row justify-between h-1/2">
           <div className="w-2/3 justify-center items-center bg-gray-700 rounded-2xl overflow-hidden">
             {/* Afficher Unity seulement après le clic sur le bouton Play */}
-            <UnityPlayer />
+            <UnityPlayer unityUrl="/WebGL Builds/index.html"/>
           </div>
 
           <div className="w-1/2 flex flex-col pl-6">

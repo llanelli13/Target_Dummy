@@ -3,5 +3,6 @@
     "precision": "Précision",
     "speed": "Vitesse",
     "angle": "Angle",
-    "score": "Score"
+    "score": "Score",
+    "endSession": "Fin de session"
 }

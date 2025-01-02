@@ -11,7 +11,7 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 flex justify-between items-center bg-primaryBrown p-4 rounded-b-2xl z-1000">
+    <header className="sticky top-0 flex justify-between items-center bg-primaryBrown p-4 rounded-b-2xl z-50">
       <Link
         to="/shot"
         className="flex items-center space-x-2"
@@ -21,7 +21,6 @@ const Header = () => {
         <span className="text-black font-bold font-title text-2xl">Target Dummy</span>
       </Link>
 
-      {/* Navigation */}
       <nav className="flex items-center space-x-4">
         <div className="flex gap-2 bg-primaryPale rounded-3xl p-2">
           <Link
@@ -34,7 +33,6 @@ const Header = () => {
             onClick={() => handleButtonClick("Votre tir")}
           >
             {t('your_shot')}
-            {/* Votre tir */}
           </Link>
           <Link
             to="/armory"
@@ -46,7 +44,6 @@ const Header = () => {
             onClick={() => handleButtonClick("Nos armes")}
           >
             {t('armory')}
-            {/* Nos armes */}
           </Link>
           <Link
             to="/history"
@@ -58,11 +55,9 @@ const Header = () => {
             onClick={() => handleButtonClick("Historique")}
           >
             {t('history')}
-            {/* Historique */}
           </Link>
         </div>
 
-        {/* Bouton de profil cliquable */}
         <Link
           to="/profile"
           className={`flex items-center justify-center rounded-full p-1 transition-all duration-300 ease-in-out ${

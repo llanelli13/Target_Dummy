@@ -1,8 +1,8 @@
 import React from 'react';
 
-const UnityPlayer = () => {
+const UnityPlayer = ({ unityUrl }) => {
   // L'URL de ton fichier index.html généré par Unity dans le dossier public
-  const unityUrl = '/WebGL Builds/index.html';
+  // const unityUrl = '/WebGL Builds/index.html';
 
   return (
     <div className="unity-container" style={{ position: 'relative', width: '100%', height: '100%' }}>

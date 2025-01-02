@@ -4,10 +4,12 @@ import ShotScreen from './pages/ShotScreen';
 import ArmoryPage from './pages/ArmoryPage';
 import ProfilePage from './pages/ProfilePage';
 import HistoryPage from './pages/HistoryPage';
-import LoginPage from './pages/LoginPage'
+import LoginPage from './pages/LoginPage';
+import { SessionProvider } from './context/SessionContext';
 
 function App() {
   return (
+    <SessionProvider>
       <Layout>
         <Routes>
           <Route path="/" element={<LoginPage />} />
@@ -17,6 +19,7 @@ function App() {
           <Route path='/history' element={<HistoryPage />} />
         </Routes>
       </Layout>
+    </SessionProvider>
   );
 }
 

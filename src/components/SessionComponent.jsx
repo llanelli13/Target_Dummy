@@ -5,10 +5,9 @@ const SessionComponent = ({ onClose }) => {
   const { t } = useTranslation("session");
 
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleString());
-  const [modeTir, setModeTir] = useState('Tir standard');  // State for mode de tir
-  const [arme, setArme] = useState('M4A4');  // State for choix de l'arme
+  const [modeTir, setModeTir] = useState('Tir standard'); 
+  const [arme, setArme] = useState('M4A4'); 
 
-  // Update the time every second
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date().toLocaleString());
@@ -17,35 +16,27 @@ const SessionComponent = ({ onClose }) => {
     return () => clearInterval(timer);
   }, []);
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Log form data
     console.log("Form submitted with data:", {
       modeTir,
       arme,
       dateHeure: currentTime,
     });
 
-    // You can send this data to an API or save it as needed
     onClose()
-    alert('Form submitted!');
   };
 
   return (
-    <div className="fixed inset-0 flex justify-center items-center z-50">
+    <div className="fixed inset-0 flex justify-center items-center z-40">
       <div className="bg-primaryBrown text-white p-4 rounded-3xl w-1/2 h-1/4 flex flex-col relative border-4 border-secondaryPale">
-        {/* Header section */}
         <div className="flex justify-between items-center h-1/4">
           <h2 className="text-3xl font-bold font-title mb-2 text-black">{t('new_session')}</h2>
         </div>
 
-        {/* Form content */}
         <form onSubmit={handleSubmit} className="flex flex-col justify-center items-center space-y-4 mb-4">
-          {/* Dropdowns in the same line */}
           <div className="flex justify-center items-center space-x-4 w-full mb-4">
-            {/* Mode de tir dropdown */}
             <div className="w-1/3">
               <label htmlFor="modeTir" className="block text-lg font-title font-semibold text-black mb-2">
                 {t('shot_mode')}
@@ -56,12 +47,11 @@ const SessionComponent = ({ onClose }) => {
                 onChange={(e) => setModeTir(e.target.value)}
                 className="bg-primaryPale text-black font-title font-semibold rounded-full px-2 py-2 focus:outline-none w-full"
               >
-                <option value="Tir standard">Tir Standard</option>
-                <option value="Tir Interactif">Tir Interactif</option>
+                <option value="Tir standard">{t("STD_shot")}</option>
+                <option value="Tir Interactif">{t("INT_shot")}</option>
               </select>
             </div>
 
-            {/* Arme dropdown */}
             <div className="w-1/3">
               <label htmlFor="arme" className="block text-lg font-title font-semibold text-black mb-2">
                 {t('weapon')}
@@ -79,7 +69,6 @@ const SessionComponent = ({ onClose }) => {
             </div>
           </div>
 
-          {/* Submit Button */}
           <div className="absolute bottom-4 right-4">
             <button
               type="submit"
@@ -90,7 +79,6 @@ const SessionComponent = ({ onClose }) => {
           </div>
         </form>
 
-        {/* Bottom section with current time */}
         <div className="absolute bottom-4 left-4 text-black font-secondary font-semibold">
           <p>{currentTime}</p>
         </div>
