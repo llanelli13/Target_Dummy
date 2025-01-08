@@ -14,7 +14,7 @@ const ShotScreen = () => {
   const stomachImpacts = [{ x: 0, y: 0 }, { x: -15, y: 5 }];
 
   return (
-    <div className='relative '>q
+    <div className='relative '>
       <div className={`space-y-6 ${!isSessionOpen ? "blur-sm pointer-events-none" : ""}`}>
         <div className="flex justify-between items-center bg-primaryBrown p-4 rounded-2xl text-black font-bold font-secondary text-lg">
           <p>
