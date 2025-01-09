@@ -1,5 +1,6 @@
 const ShotSequence = require('../models/ShotSequence');
 
+// Create a sequence
 exports.createShotSequence = async (req, res) => {
     try {
         const shotSequence = new ShotSequence(req.body);
@@ -10,10 +11,61 @@ exports.createShotSequence = async (req, res) => {
     }
 };
 
+// Get all sequences
 exports.getShotSequences = async (req, res) => {
     try {
-        const shotsequences = await ShotSequence.find();
-        res.status(200).json(shotsequences);
+        const shotSequences = await ShotSequence.find().populate('ID_weapon ID_user');
+        res.status(200).json(shotSequences);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Get sequence by ID
+exports.getShotSequenceById = async (req, res) => {
+    try {
+        const shotSequence = await ShotSequence.findById(req.params.id).populate('ID_weapon ID_user');
+        if (!shotSequence) {
+            return res.status(404).json({ error: 'ShotSequence not found' });
+        }
+        res.status(200).json(shotSequence);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Get user's history
+exports.getHistory = async (req, res) => {
+    try {
+        const shotSequences = await ShotSequence.find({ ID_user: req.params.userId }).populate('ID_weapon');
+        res.status(200).json(shotSequences);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Modify a sequence
+exports.modifyShotSequence = async (req, res) => {
+    try {
+        const updates = req.body;
+        const shotSequence = await ShotSequence.findByIdAndUpdate(req.params.id, updates, { new: true }).populate('ID_weapon ID_user');
+        if (!shotSequence) {
+            return res.status(404).json({ error: 'ShotSequence not found' });
+        }
+        res.status(200).json(shotSequence);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Delete a sequence
+exports.deleteShotSequence = async (req, res) => {
+    try {
+        const shotSequence = await ShotSequence.findByIdAndDelete(req.params.id);
+        if (!shotSequence) {
+            return res.status(404).json({ error: 'ShotSequence not found' });
+        }
+        res.status(200).json({ message: 'ShotSequence deleted successfully' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

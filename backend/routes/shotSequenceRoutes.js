@@ -6,3 +6,5 @@ router.post('/', shotSequenceController.createShotSequence);
 router.get('/', shotSequenceController.getShotSequences);
 
 module.exports = router;
+
+// addShotSequence
