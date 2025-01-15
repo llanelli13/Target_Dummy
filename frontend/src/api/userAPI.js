@@ -4,7 +4,6 @@ const BASE_URL = "http://localhost:5000/api/users"; // Remplace par l'URL de ton
 
 // Inscription d'un utilisateur
 export const registerUser = async (userData) => {
-    console.log("userData", userData)
     try {
         const response = await axios.post(`${BASE_URL}/register`, userData);
         return response.data;
@@ -16,9 +15,9 @@ export const registerUser = async (userData) => {
 
 // Connexion d'un utilisateur
 export const loginUser = async (credentials) => {
-    console.log("credentials", credentials)
     try {
         const response = await axios.post(`${BASE_URL}/login`, credentials);
+        console.log('response', response.data);
         return response.data;
     } catch (error) {
         console.error("Erreur lors de la connexion :", error);

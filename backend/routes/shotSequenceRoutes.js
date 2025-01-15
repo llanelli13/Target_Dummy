@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const shotSequenceController = require('../controllers/shotSequenceController');
 
-router.post('/', shotSequenceController.createShotSequence);
+router.post('/create', shotSequenceController.createShotSequence);
 router.get('/', shotSequenceController.getShotSequences);
 
 router.get('/user/:userId', shotSequenceController.getHistory); // Historique d'un utilisateur

@@ -21,7 +21,16 @@ exports.loginUser = async (req, res) => {
         if (!user) {
             return res.status(401).json({ error: 'Invalid username or password' });
         }
-        res.status(200).json({ message: 'Login successful', user });
+        res.status(200).json({ message: 'Login successful', user, id: user._id });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+// Get all users
+exports.getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find();
+        res.status(200).json(users);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

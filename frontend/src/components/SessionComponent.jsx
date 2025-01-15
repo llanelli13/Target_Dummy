@@ -1,12 +1,39 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSession } from '../context/SessionContext';
+import { getWeapons } from '../api/weaponAPI';
 
 const SessionComponent = ({ onClose }) => {
   const { t } = useTranslation("session");
-
+  const [guns, setGuns] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { setSessionData } = useSession();
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleString());
-  const [modeTir, setModeTir] = useState('Tir standard'); 
-  const [arme, setArme] = useState('M4A4'); 
+  const [modeTir, setModeTir] = useState('Tir standard');
+  const [selectedGunId, setSelectedGunId] = useState('');
+
+  useEffect(() => {
+    const fetchGuns = async () => {
+      try {
+        const data = await getWeapons();
+        setGuns(data.map(weapon => ({
+          id: weapon._id,
+          idWeapon: weapon.ID_weapon,
+          name: weapon.name_weapon
+        })));
+        if (data.length > 0) {
+          setSelectedGunId(data[0]._id);
+        }
+      } catch (err) {
+        setError("Erreur lors du chargement des armes : " + err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGuns();
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -18,15 +45,25 @@ const SessionComponent = ({ onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    console.log("Form submitted with data:", {
+
+    const selectedGun = guns.find(gun => gun.id === selectedGunId);
+    if (!selectedGun) {
+      setError(t("weapon_selection_error"));
+      return;
+    }
+
+    setSessionData({
       modeTir,
-      arme,
-      dateHeure: currentTime,
+      arme: selectedGun.name,
+      idWeapon: selectedGun.id,
+      dateHeure: currentTime
     });
 
-    onClose()
+    onClose();
   };
+
+  if (loading) return <p>Chargement des armes...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div className="fixed inset-0 flex justify-center items-center z-40">
@@ -58,13 +95,13 @@ const SessionComponent = ({ onClose }) => {
               </label>
               <select
                 id="arme"
-                value={arme}
-                onChange={(e) => setArme(e.target.value)}
+                value={selectedGunId}
+                onChange={(e) => setSelectedGunId(e.target.value)}
                 className="bg-primaryPale text-black font-title font-semibold rounded-full px-2 py-2 focus:outline-none w-full"
               >
-                <option value="M4A4">M4A4</option>
-                <option value="Glock">Glock</option>
-                <option value="AWP">AWP</option>
+                {guns.map((gun) => (
+                  <option key={gun.id} value={gun.id}>{gun.name}</option>
+                ))}
               </select>
             </div>
           </div>

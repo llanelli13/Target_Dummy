@@ -4,7 +4,7 @@ const userController = require('../controllers/userController');
 
 // Routes existantes
 router.post('/register', userController.registerUser); // Register
-router.get('/', userController.getUser); // Get all users
+router.get('/', userController.getAllUsers); // Get all users
 
 // Nouvelles routes
 router.post('/login', userController.loginUser);

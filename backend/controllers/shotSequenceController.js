@@ -3,6 +3,7 @@ const ShotSequence = require('../models/ShotSequence');
 // Create a sequence
 exports.createShotSequence = async (req, res) => {
     try {
+        console.log("Data shotsequence", req.body);
         const shotSequence = new ShotSequence(req.body);
         await shotSequence.save();
         res.status(201).json(shotSequence);
