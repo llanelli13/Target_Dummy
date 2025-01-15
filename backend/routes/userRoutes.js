@@ -3,7 +3,7 @@ const router = express.Router();
 const userController = require('../controllers/userController');
 
 // Routes existantes
-router.post('/', userController.registerUser); // Register
+router.post('/register', userController.registerUser); // Register
 router.get('/', userController.getUser); // Get all users
 
 // Nouvelles routes

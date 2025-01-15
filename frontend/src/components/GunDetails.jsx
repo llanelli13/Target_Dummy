@@ -1,15 +1,8 @@
-import { useState } from 'react';
-import VideoComponent from './VideoComponent';
 import { useTranslation } from 'react-i18next';
 import UnityPlayer from './UnityPlayer';
 
 const GunDetails = ({ gun, onClose }) => {
   const { t } = useTranslation("armory");
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  const handlePlayClick = () => {
-    setIsPlaying(true); // Lorsque l'utilisateur clique sur "Play", on met isPlaying à true
-  };
 
   return (
     <div className="fixed inset-0 flex justify-center items-center z-50">
@@ -22,7 +15,7 @@ const GunDetails = ({ gun, onClose }) => {
 
           <div className="w-1/2 flex flex-col pl-6">
             <div className="flex justify-center items-center relative">
-              <h2 className="text-2xl font-bold mb-2 font-title text-black">{gun.name}</h2>
+              <h2 className="text-2xl font-bold mb-2 font-title text-black">{gun.name_weapon}</h2>
               <button
                 onClick={onClose}
                 className="absolute top-0 right-0 bg-red-500 font-bold p-2 rounded-full hover:bg-red-600"
@@ -38,9 +31,9 @@ const GunDetails = ({ gun, onClose }) => {
         {/* Informations sur l'arme */}
         <div className="h-1/2">
           <ul className="space-y-1 text-sm mt-10">
-            <li className="text-lg text-black">{t("caliber")} : {gun.caliber}</li>
-            <li className="text-lg text-black">{t("weight")} : {gun.weight} kg</li>
-            <li className="text-lg text-black">{t("speed")} : {gun.speed} m/s</li>
+            <li className="text-lg text-black">{t("caliber")} : {gun.weapon_caliber}</li>
+            <li className="text-lg text-black">{t("weight")} : {gun.weapon_weight} kg</li>
+            <li className="text-lg text-black">{t("speed")} : {gun.weapon_power} m/s</li>
           </ul>
         </div>
       </div>
