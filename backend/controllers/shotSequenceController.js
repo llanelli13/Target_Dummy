@@ -3,8 +3,17 @@ const ShotSequence = require('../models/ShotSequence');
 // Create a sequence
 exports.createShotSequence = async (req, res) => {
     try {
-        console.log("Data shotsequence", req.body);
-        const shotSequence = new ShotSequence(req.body);
+        const { sequence_date, ID_weapon, ID_user, distance, shot_power, location } = req.body;
+
+        const shotSequence = new ShotSequence({
+            sequence_date,
+            ID_weapon, // ObjectId de l'arme (référence à la collection Weapon)
+            ID_user,   // ObjectId de l'utilisateur (référence à la collection User)
+            distance,
+            shot_power,
+            location,
+        });
+
         await shotSequence.save();
         res.status(201).json(shotSequence);
     } catch (error) {
