@@ -11,6 +11,7 @@ import { io } from 'socket.io-client';
 const ShotScreen = () => {
   const { t } = useTranslation('shot');
   const { isSessionOpen, startSession, endSession, sessionData, userID } = useSession();
+  const [user, setUser] = useState(null);
   const [score, setScore] = useState(0);
   const [precision, setPrecision] = useState('0%');
   const [speed, setSpeed] = useState('0 m/s');
@@ -38,16 +39,32 @@ const ShotScreen = () => {
   //   };
   // }, [socket]);
 
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     try {
+  //       const response = await fetch(`/api/users/${userID}`);
+  //       const data = await response.json();
+  //       console.log("data : ", data);
+  //       setUser(data);
+  //     } catch (error) {
+  //       console.error('Error fetching user data:', error);
+  //     }
+  //   };
+
+  //   if (userID) {
+  //     fetchUserData();
+  //   } 
+  // }, [userID]);
+
   const handleEndSession = async () => {
     const shotSequenceData = {
       sequence_date: sessionData?.dateHeure,
       ID_weapon: sessionData?.idWeapon,
-      ID_user: "678032870939b77d3bc22839",
-      firing_mode: sessionData?.modeTir,
+      ID_user: userID,
+      // firing_mode: sessionData?.modeTir,
       shot_power: score,
-      precision,
-      speed,
-      angle,
+      distance: 80,
+      location: "Range B",
       impacts: {
         heart: heartImpacts,
         head: headImpacts,
@@ -65,12 +82,13 @@ const ShotScreen = () => {
     }
   };
 
+
   return (
     <div className='relative'>
       <div className={`space-y-6 ${!isSessionOpen ? 'blur-sm pointer-events-none' : ''}`}>
         <div className="flex justify-between items-center bg-primaryBrown p-4 rounded-2xl text-black font-bold font-secondary text-lg">
           <p>
-            {t('welcome')} {`{Username}`} !
+            {t('welcome')} {user?.name} !
           </p>
           <button
             onClick={handleEndSession}
@@ -82,7 +100,7 @@ const ShotScreen = () => {
 
         <div className="flex flex-col md:flex-row gap-6">
           <div className="flex-grow w-2/3 h-auto">
-            <UnityPlayer unityUrl="/WebGL Builds Shoot/shot.html" />
+            {/* <UnityPlayer unityUrl="/WebGL Builds Shoot/shot.html" /> */}
           </div>
 
           <div className="flex flex-col space-y-6 md:w-1/3 bg-primaryBrown rounded-2xl p-6">

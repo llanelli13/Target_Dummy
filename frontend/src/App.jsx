@@ -6,17 +6,46 @@ import ProfilePage from './pages/ProfilePage';
 import HistoryPage from './pages/HistoryPage';
 import LoginPage from './pages/LoginPage';
 import { SessionProvider } from './context/SessionContext';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   return (
-    <SessionProvider>
+<SessionProvider>
       <Layout>
         <Routes>
           <Route path="/" element={<LoginPage />} />
-          <Route path="/shot" element={<ShotScreen />} />
-          <Route path="/armory" element={<ArmoryPage />} />
-          <Route path="/profile" element={<ProfilePage />} /> 
-          <Route path='/history' element={<HistoryPage />} />
+          <Route
+            path="/shot"
+            element={
+              <PrivateRoute>
+                <ShotScreen />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/armory"
+            element={
+              <PrivateRoute>
+                <ArmoryPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <ProfilePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/history"
+            element={
+              <PrivateRoute>
+                <HistoryPage />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </Layout>
     </SessionProvider>

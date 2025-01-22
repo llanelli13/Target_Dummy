@@ -17,7 +17,6 @@ export const registerUser = async (userData) => {
 export const loginUser = async (credentials) => {
     try {
         const response = await axios.post(`${BASE_URL}/login`, credentials);
-        console.log('response', response.data);
         return response.data;
     } catch (error) {
         console.error("Erreur lors de la connexion :", error);

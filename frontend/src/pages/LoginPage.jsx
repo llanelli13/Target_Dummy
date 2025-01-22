@@ -31,14 +31,8 @@ const LoginPage = () => {
     }
     try {
       if (isSignup) {
-        const response = await registerUser({
-          user_name: userData.user_name,
-          user_firstname: userData.user_firstname,
-          email: userData.email,
-          birth_date: userData.birth_date,
-          password: userData.password,
-        });
-        setUserID(response._id)
+        const response = await registerUser({userData});
+        setUserID(response.id)
         navigate("/shot"); 
       } else {
         const response = await loginUser({
@@ -46,7 +40,7 @@ const LoginPage = () => {
           password: userData.password,
         });
         if (response.user) {
-          setUserID(response.user._id);
+          setUserID(response.id);
           navigate("/shot");
         }
       }
