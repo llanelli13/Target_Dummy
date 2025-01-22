@@ -56,9 +56,12 @@ const ShotScreen = () => {
   //   } 
   // }, [userID]);
 
+
   const handleEndSession = async () => {
+
+    console.log("sessionData : ", sessionData); 
     const shotSequenceData = {
-      sequence_date: sessionData?.dateHeure,
+      sequence_date: new Date(sessionData?.dateHeure).toISOString(),
       ID_weapon: sessionData?.idWeapon,
       ID_user: userID,
       // firing_mode: sessionData?.modeTir,

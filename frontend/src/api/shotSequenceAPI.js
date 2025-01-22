@@ -27,7 +27,7 @@ export const getShotSequenceById = async (id) => {
 // Créer une nouvelle séquence de tir
 export const createShotSequence = async (shotSequenceData) => {
     try {
-        const response = await axios.post(BASE_URL, shotSequenceData);
+        const response = await axios.post(`${BASE_URL}/create`, shotSequenceData);	
         return response.data;
     } catch (error) {
         console.error("Erreur lors de la création de la séquence de tir :", error);
@@ -38,7 +38,7 @@ export const createShotSequence = async (shotSequenceData) => {
 // Récupérer l'historique des séquences pour un utilisateur donné
 export const getUserHistory = async (userId) => {
     try {
-        const response = await axios.get(`${BASE_URL}/history/${userId}`);
+        const response = await axios.get(`${BASE_URL}/user/${userId}`);
         return response.data;
     } catch (error) {
         console.error("Erreur lors de la récupération de l'historique de l'utilisateur :", error);

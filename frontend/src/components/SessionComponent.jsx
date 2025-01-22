@@ -37,7 +37,7 @@ const SessionComponent = ({ onClose }) => {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentTime(new Date().toLocaleString());
+      setCurrentTime(new Date().toISOString());
     }, 1000);
 
     return () => clearInterval(timer);
