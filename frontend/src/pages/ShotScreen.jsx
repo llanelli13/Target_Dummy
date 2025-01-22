@@ -16,6 +16,7 @@ const ShotScreen = () => {
   const [precision, setPrecision] = useState('0%');
   const [speed, setSpeed] = useState('0 m/s');
   const [angle, setAngle] = useState('0°');
+
   const [heartImpacts, setHeartImpacts] = useState([{ x: 5, y: -10 }, { x: -10, y: 15 }]);
   const [headImpacts, setHeadImpacts] = useState([{ x: -20, y: 20 }, { x: 10, y: -15 }]);
   const [stomachImpacts, setStomachImpacts] = useState([{ x: 0, y: 0 }, { x: -15, y: 5 }]);
@@ -39,23 +40,11 @@ const ShotScreen = () => {
   //   };
   // }, [socket]);
 
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     try {
-  //       const response = await fetch(`/api/users/${userID}`);
-  //       const data = await response.json();
-  //       console.log("data : ", data);
-  //       setUser(data);
-  //     } catch (error) {
-  //       console.error('Error fetching user data:', error);
-  //     }
-  //   };
-
-  //   if (userID) {
-  //     fetchUserData();
-  //   } 
-  // }, [userID]);
-
+  const sequenceData = [
+    {position: 0.5, target: 'heart', target_hit: 'heart'},
+    {position: 0.9, target: 'heart', target_hit: 'left_shoulder'},
+    {position: 0.2, target: 'head', target_hit: 'head'},
+  ]
 
   const handleEndSession = async () => {
 
@@ -68,11 +57,7 @@ const ShotScreen = () => {
       shot_power: score,
       distance: 80,
       location: "Range B",
-      impacts: {
-        heart: heartImpacts,
-        head: headImpacts,
-        stomach: stomachImpacts
-      }
+      sequence_data: sequenceData
     };
 
     console.log('Enregistrement de la séquence de tir', shotSequenceData);
