@@ -4,5 +4,7 @@
     "name": "Nom",
     "email": "Email",
     "delete_history": "Supprimer l'historique",
-    "stats_weapon": "Statistiques d'armes"
+    "stats_weapon": "Statistiques d'armes",
+    "civil": "Civil",
+    "military": "Militaire"
 }

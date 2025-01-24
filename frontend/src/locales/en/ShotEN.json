@@ -7,5 +7,8 @@
     "endSession": "End session",
     "heart": "Heart",
     "stomach": "Stomach",
-    "head": "Head"
+    "head": "Head",
+    "target1": "Target 1",
+    "target2": "Target 2",
+    "target3": "Target 3"
 }

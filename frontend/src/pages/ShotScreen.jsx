@@ -7,6 +7,7 @@ import TargetComponent from '../components/TargetComponent';
 import { useState, useEffect } from 'react';
 import { createShotSequence } from '../api/shotSequenceAPI';
 import { io } from 'socket.io-client';
+import { useMode } from '../context/ModeContext';
 
 const ShotScreen = () => {
   const { t } = useTranslation('shot');
@@ -16,10 +17,12 @@ const ShotScreen = () => {
   const [precision, setPrecision] = useState('0%');
   const [speed, setSpeed] = useState('0 m/s');
   const [angle, setAngle] = useState('0°');
+  const { mode } = useMode();
 
   const [heartImpacts, setHeartImpacts] = useState([{ x: 5, y: -10 }, { x: -10, y: 15 }]);
   const [headImpacts, setHeadImpacts] = useState([{ x: -20, y: 20 }, { x: 10, y: -15 }]);
   const [stomachImpacts, setStomachImpacts] = useState([{ x: 0, y: 0 }, { x: -15, y: 5 }]);
+
   // const socket = useState(() => io('ws://your-websocket-server.com'))[0];
 
   // useEffect(() => {
@@ -48,7 +51,6 @@ const ShotScreen = () => {
 
   const handleEndSession = async () => {
 
-    console.log("sessionData : ", sessionData); 
     const shotSequenceData = {
       sequence_date: new Date(sessionData?.dateHeure).toISOString(),
       ID_weapon: sessionData?.idWeapon,
@@ -60,7 +62,6 @@ const ShotScreen = () => {
       sequence_data: sequenceData
     };
 
-    console.log('Enregistrement de la séquence de tir', shotSequenceData);
 
     try {
       await createShotSequence(shotSequenceData);
@@ -70,13 +71,12 @@ const ShotScreen = () => {
     }
   };
 
-
   return (
     <div className='relative'>
       <div className={`space-y-6 ${!isSessionOpen ? 'blur-sm pointer-events-none' : ''}`}>
         <div className="flex justify-between items-center bg-primaryBrown p-4 rounded-2xl text-black font-bold font-secondary text-lg">
           <p>
-            {t('welcome')} {user?.name} !
+            {t('welcome')} {user?.user_firstname} !
           </p>
           <button
             onClick={handleEndSession}
@@ -88,7 +88,7 @@ const ShotScreen = () => {
 
         <div className="flex flex-col md:flex-row gap-6">
           <div className="flex-grow w-2/3 h-auto">
-            <UnityPlayer unityUrl="/WebGL Builds Shoot/shot.html" />
+            {/* <UnityPlayer unityUrl="/WebGL Builds Shoot/shot.html" /> */}
           </div>
 
           <div className="flex flex-col space-y-6 md:w-1/3 bg-primaryBrown rounded-2xl p-6">
@@ -101,15 +101,15 @@ const ShotScreen = () => {
 
         <div className="flex justify-around bg-primaryBrown rounded-2xl p-4">
           <div className="flex flex-col items-center space-y-2">
-            <span className="text-white font-secondary font-semibold">{t('heart')}</span>
+            <span className="text-white font-secondary font-semibold">{mode === "Military" ? t('heart') : t('target1')}</span>
             <TargetComponent impacts={heartImpacts} />
           </div>
           <div className="flex flex-col items-center space-y-2">
-            <span className="text-white font-secondary font-semibold">{t('head')}</span>
+            <span className="text-white font-secondary font-semibold">{mode === "Military" ? t('head') : t('target2')}</span>
             <TargetComponent impacts={headImpacts} />
           </div>
           <div className="flex flex-col items-center space-y-2">
-            <span className="text-white font-secondary font-semibold">{t('stomach')}</span>
+            <span className="text-white font-secondary font-semibold">{mode === "Military" ? t('stomach') : t('target2')}</span>
             <TargetComponent impacts={stomachImpacts} />
           </div>
         </div>
