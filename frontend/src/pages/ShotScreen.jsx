@@ -88,7 +88,7 @@ const ShotScreen = () => {
 
         <div className="flex flex-col md:flex-row gap-6">
           <div className="flex-grow w-2/3 h-auto">
-            {/* <UnityPlayer unityUrl="/WebGL Builds Shoot/shot.html" /> */}
+            <UnityPlayer unityUrl="/WebGL Builds Shoot/shot.html" />
           </div>
 
           <div className="flex flex-col space-y-6 md:w-1/3 bg-primaryBrown rounded-2xl p-6">

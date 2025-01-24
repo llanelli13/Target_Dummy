@@ -37,7 +37,7 @@ const SessionComponent = ({ onClose }) => {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentTime(new Date().toISOString());
+      setCurrentTime(new Date());
     }, 1000);
 
     return () => clearInterval(timer);
@@ -56,7 +56,7 @@ const SessionComponent = ({ onClose }) => {
       modeTir,
       arme: selectedGun.name,
       idWeapon: selectedGun.id,
-      dateHeure: currentTime
+      dateHeure: currentTime.toISOString()
     });
 
     onClose();
@@ -117,7 +117,7 @@ const SessionComponent = ({ onClose }) => {
         </form>
 
         <div className="absolute bottom-4 left-4 text-black font-secondary font-semibold">
-          <p>{currentTime}</p>
+          <p>{currentTime.toLocaleString()}</p>
         </div>
       </div>
     </div>

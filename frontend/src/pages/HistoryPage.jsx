@@ -91,9 +91,10 @@
 
 import { useState, useEffect } from "react";
 import SearchBar from "../components/SearchBar";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import { useSession } from "../context/SessionContext";
 import { getUserHistory } from "../api/shotSequenceAPI";
+import GunDetails from "../components/GunDetails";
 
 const HistoryPage = () => {
   const { t } = useTranslation("history");
@@ -102,6 +103,7 @@ const HistoryPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [historyData, setHistoryData] = useState([]);
+  const [selectedGun, setSelectedGun] = useState(null);
 
   useEffect(() => {
     const fetchShotSequences = async () => {
@@ -109,7 +111,7 @@ const HistoryPage = () => {
         const data = await getUserHistory(userID);
         setHistoryData(data);
       } catch (error) {
-        console.error('Error fetching shot sequences:', error);
+        console.error("Error fetching shot sequences:", error);
       }
     };
 
@@ -118,57 +120,97 @@ const HistoryPage = () => {
     }
   }, [userID]);
 
-  // Gestion des filtres et de la recherche
-  const filteredData = historyData.filter(
-    (sequence) =>
-      (filterType === "" || sequence.ID_weapon.weapon_type === filterType) &&
-      (searchQuery === "" ||
-        sequence.ID_weapon.name_weapon.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const handleSort = (key) => {
+    setSortConfig({
+      key,
+      direction: sortConfig.direction === "ascending" ? "descending" : "ascending",
+    });
+  };
 
-  // Gestion du tri
-  const sortedData = [...filteredData].sort((a, b) => {
-    if (sortConfig.key === null) return 0;
-    const valueA = sortConfig.key === "sequence_date" ? new Date(a[sortConfig.key]) : a[sortConfig.key];
-    const valueB = sortConfig.key === "sequence_date" ? new Date(b[sortConfig.key]) : b[sortConfig.key];
-    if (valueA < valueB) return sortConfig.direction === "ascending" ? -1 : 1;
-    if (valueA > valueB) return sortConfig.direction === "ascending" ? 1 : -1;
-    return 0;
-  });
+  const sortedData = [...historyData]
+    .filter(
+      (sequence) =>
+        (filterType === "" || sequence.ID_weapon.weapon_type === filterType) &&
+        (searchQuery === "" ||
+          sequence.ID_weapon.name_weapon.toLowerCase().includes(searchQuery.toLowerCase()))
+    )
+    .sort((a, b) => {
+      if (sortConfig.key === null) return 0;
+      const valueA =
+        sortConfig.key === "sequence_date" ? new Date(a[sortConfig.key]) : a[sortConfig.key];
+      const valueB =
+        sortConfig.key === "sequence_date" ? new Date(b[sortConfig.key]) : b[sortConfig.key];
+      if (valueA < valueB) return sortConfig.direction === "ascending" ? -1 : 1;
+      if (valueA > valueB) return sortConfig.direction === "ascending" ? 1 : -1;
+      return 0;
+    });
+
+  const handleGunClick = (gun) => {
+    setSelectedGun(gun);
+  };
+
+  const handleCloseDetails = () => {
+    setSelectedGun(null);
+  };
 
   return (
-    <div>
-      {console.log("historyData", historyData)}
-      <SearchBar
-        filterType={filterType}
-        setFilterType={setFilterType}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-      />
-      <table>
-        <thead>
-          <tr>
-            <th onClick={() => setSortConfig({ key: "sequence_date", direction: sortConfig.direction === "ascending" ? "descending" : "ascending" })}>
-              {t("history:date")}
-            </th>
-            <th onClick={() => setSortConfig({ key: "ID_weapon.name_weapon", direction: sortConfig.direction === "ascending" ? "descending" : "ascending" })}>
-              {t("history:weaponName")}
-            </th>
-            <th onClick={() => setSortConfig({ key: "location", direction: sortConfig.direction === "ascending" ? "descending" : "ascending" })}>
-              {t("history:location")}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedData.map((sequence) => (
-            <tr key={sequence._id}>
-              <td>{new Date(sequence.sequence_date).toLocaleDateString()}</td>
-              <td>{sequence.ID_weapon.name_weapon}</td>
-              <td>{sequence.location}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="p-6 text-white min-h-screen">
+      {/* Barre de recherche avec filtres */}
+      <div className="mb-6">
+        <SearchBar
+          filterType={filterType}
+          setFilterType={setFilterType}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+        />
+      </div>
+
+      {/* Tableau dynamique */}
+      <div className="space-y-4">
+        {/* Header du tableau */}
+        <div className="flex justify-between items-center bg-primaryBrown p-4 rounded-2xl font-bold">
+          <div
+            className="flex-1 cursor-pointer"
+            onClick={() => handleSort("sequence_date")}
+          >
+            {t("history:date")}{" "}
+            {sortConfig.key === "sequence_date" &&
+              (sortConfig.direction === "ascending" ? "↑" : "↓")}
+          </div>
+          <div
+            className="flex-1 cursor-pointer text-center"
+            onClick={() => handleSort("ID_weapon.name_weapon")}
+          >
+            {t("history:weaponName")}{" "}
+            {sortConfig.key === "ID_weapon.name_weapon" &&
+              (sortConfig.direction === "ascending" ? "↑" : "↓")}
+          </div>
+          <div
+            className="flex-1 cursor-pointer text-right"
+            onClick={() => handleSort("location")}
+          >
+            {t("history:location")}{" "}
+            {sortConfig.key === "location" &&
+              (sortConfig.direction === "ascending" ? "↑" : "↓")}
+          </div>
+        </div>
+
+        {/* Lignes dynamiques */}
+        {sortedData.map((sequence, index) => (
+          <div
+            key={sequence._id}
+            className="flex justify-between items-center bg-primaryPale p-4 rounded-full cursor-pointer hover:bg-secondaryPale transition-all"
+            onClick={() => handleGunClick(sequence)}
+          >
+            <div className="flex-1 text-black">{new Date(sequence.sequence_date).toLocaleDateString()}</div>
+            <div className="flex-1 text-center text-black">{sequence.ID_weapon.name_weapon}</div>
+            <div className="flex-1 text-right text-black">{sequence.location}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Affichage des détails */
+      console.log("Détails sur la session : ", selectedGun)}
     </div>
   );
 };

@@ -14,7 +14,7 @@ const GunCard = ({ gun, onClick }) => {
       onClick={onClick}
     >
       <img
-        src={gun.weapon_image}
+        src={gun.image}
         alt={gun.name_weapon}
         className="w-full h-32 object-cover rounded-3xl shadow-md shadow-primaryDark"
       />

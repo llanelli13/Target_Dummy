@@ -1,5 +1,7 @@
 {
     "date": "Last session",
     "name": "Name",
-    "shot": "Shots"
+    "shot": "Shots",
+    "location": "Location",
+    "weaponName": "Weapon"
 }
