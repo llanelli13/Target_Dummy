@@ -94,7 +94,7 @@ import SearchBar from "../components/SearchBar";
 import { useTranslation } from "react-i18next";
 import { useSession } from "../context/SessionContext";
 import { getUserHistory } from "../api/shotSequenceAPI";
-import GunDetails from "../components/GunDetails";
+import HistoryDetails from "../components/HistoryDetails";
 
 const HistoryPage = () => {
   const { t } = useTranslation("history");
@@ -103,8 +103,9 @@ const HistoryPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [historyData, setHistoryData] = useState([]);
-  const [selectedGun, setSelectedGun] = useState(null);
+  const [selectedSession, setSelectedSession] = useState(null); // Utilisé pour afficher les détails de la session
 
+  // Récupération des données utilisateur
   useEffect(() => {
     const fetchShotSequences = async () => {
       try {
@@ -120,6 +121,7 @@ const HistoryPage = () => {
     }
   }, [userID]);
 
+  // Gestion du tri
   const handleSort = (key) => {
     setSortConfig({
       key,
@@ -127,6 +129,7 @@ const HistoryPage = () => {
     });
   };
 
+  // Tri et filtrage des données
   const sortedData = [...historyData]
     .filter(
       (sequence) =>
@@ -145,12 +148,14 @@ const HistoryPage = () => {
       return 0;
     });
 
-  const handleGunClick = (gun) => {
-    setSelectedGun(gun);
+  // Gestion des clics sur une session
+  const handleSessionClick = (session) => {
+    console.log("Détails sur la session : ", session); // Log des détails de la session
+    setSelectedSession(session); // Ouvre la fenêtre avec la session sélectionnée
   };
 
-  const handleCloseDetails = () => {
-    setSelectedGun(null);
+  const handleCloseDetailsSession = () => {
+    setSelectedSession(null); // Ferme la fenêtre
   };
 
   return (
@@ -196,11 +201,11 @@ const HistoryPage = () => {
         </div>
 
         {/* Lignes dynamiques */}
-        {sortedData.map((sequence, index) => (
+        {sortedData.map((sequence) => (
           <div
             key={sequence._id}
             className="flex justify-between items-center bg-primaryPale p-4 rounded-full cursor-pointer hover:bg-secondaryPale transition-all"
-            onClick={() => handleGunClick(sequence)}
+            onClick={() => handleSessionClick(sequence)} // Appel correct
           >
             <div className="flex-1 text-black">{new Date(sequence.sequence_date).toLocaleDateString()}</div>
             <div className="flex-1 text-center text-black">{sequence.ID_weapon.name_weapon}</div>
@@ -209,10 +214,15 @@ const HistoryPage = () => {
         ))}
       </div>
 
-      {/* Affichage des détails */
-      console.log("Détails sur la session : ", selectedGun)}
+      {/* Affichage des détails */}
+      {selectedSession && (
+        <div className="absolute inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <HistoryDetails session={selectedSession} onClose={handleCloseDetailsSession} />
+        </div>
+      )}
     </div>
   );
 };
 
 export default HistoryPage;
+
