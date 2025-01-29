@@ -11,6 +11,7 @@ import {
 ChartJS.register(LinearScale, PointElement, Tooltip, Legend);
 
 const calculateStats = (sequenceData) => {
+  console.log("data :", sequenceData)
   const totalShots = sequenceData.length;
 
   // Tirs prévus (où `target` est défini)

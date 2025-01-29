@@ -4,9 +4,8 @@ import UnityPlayer from '../components/UnityPlayer';
 import InfoBox from '../components/InfoBox';
 import { useTranslation } from 'react-i18next';
 import TargetComponent from '../components/TargetComponent';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createShotSequence } from '../api/shotSequenceAPI';
-import { io } from 'socket.io-client';
 import { useMode } from '../context/ModeContext';
 
 const ShotScreen = () => {
@@ -19,29 +18,49 @@ const ShotScreen = () => {
   const [angle, setAngle] = useState('0°');
   const { mode } = useMode();
 
-  const [heartImpacts, setHeartImpacts] = useState([{ x: 5, y: -10 }, { x: -10, y: 15 }]);
-  const [headImpacts, setHeadImpacts] = useState([{ x: -20, y: 20 }, { x: 10, y: -15 }]);
-  const [stomachImpacts, setStomachImpacts] = useState([{ x: 0, y: 0 }, { x: -15, y: 5 }]);
+  const [heartImpacts, setHeartImpacts] = useState([{ x: -0.20, y: 4.5 }, { x: 0.10, y: -0.15 }])
+  const [headImpacts, setHeadImpacts] = useState([]);
+  const [stomachImpacts, setStomachImpacts] = useState([{ x: -0.9, y: -1.6 }, { x: -0.15, y: 3.5 }]);
+  const socketRef = useRef(null)
 
-  // const socket = useState(() => io('ws://your-websocket-server.com'))[0];
+  const openConnection = () => {
+    socketRef.current = new WebSocket('ws://192.168.7.1:81');
+    console.log("Established", socketRef.current);
 
-  // useEffect(() => {
-  //   if (!socket) return;
+    window.socketRef = socketRef;
 
-  //   socket.on('targetData', (data) => {
-  //     if (data.target === 'heart') {
-  //       setHeartImpacts((prev) => [...prev, { x: data.x, y: data.y }]);
-  //     } else if (data.target === 'head') {
-  //       setHeadImpacts((prev) => [...prev, { x: data.x, y: data.y }]);
-  //     } else if (data.target === 'stomach') {
-  //       setStomachImpacts((prev) => [...prev, { x: data.x, y: data.y }]);
-  //     }
-  //   });
+    socketRef.current.addEventListener('open', function () {
+      console.log("WebSocket connection established");
+    });
 
-  //   return () => {
-  //     socket.disconnect();
-  //   };
-  // }, [socket]);
+    socketRef.current.addEventListener('message', function (event) {
+      const data = JSON.parse(event.data);
+      console.log("data", data)
+    
+      setHeadImpacts((prev) => [...prev, {x: data.x, y:data.y}])
+    
+      // if (data.target === 'heart') {
+      //   setHeartImpacts((prev) => [...prev, { x: data.x, y: data.y }]);
+      // } else if (data.target === 'head') {
+      //   setHeadImpacts((prev) => [...prev, { x: data.x, y: data.y }]);
+      // } else if (data.target === 'stomach') {
+      //   setStomachImpacts((prev) => [...prev, { x: data.x, y: data.y }]);
+      // }
+    });
+
+    return () => {
+      socketRef.current.close();
+    };
+  };
+
+  const closeConnection = () => {
+    if (socketRef.current) {
+      socketRef.current.close();
+      console.log("WebSocket connection closed");
+    }
+  };
+
+
 
   const sequenceData = [
     {position: 0.5, target: 'heart', target_hit: 'heart'},
@@ -66,6 +85,10 @@ const ShotScreen = () => {
     try {
       await createShotSequence(shotSequenceData);
       endSession();
+      setHeadImpacts([])
+      setHeartImpacts([])
+      setStomachImpacts([])
+      closeConnection();
     } catch (err) {
       console.error('Erreur lors de l\'enregistrement de la séquence de tir', err);
     }
@@ -74,6 +97,8 @@ const ShotScreen = () => {
   return (
     <div className='relative'>
       <div className={`space-y-6 ${!isSessionOpen ? 'blur-sm pointer-events-none' : ''}`}>
+      <button onClick={openConnection}>Open Connection</button>
+      {/* <button onClick={closeConnection}>Close Connection</button> */}
         <div className="flex justify-between items-center bg-primaryBrown p-4 rounded-2xl text-black font-bold font-secondary text-lg">
           <p>
             {t('welcome')} {user?.user_firstname} !
