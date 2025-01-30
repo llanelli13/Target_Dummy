@@ -8,27 +8,26 @@ const GunDetails = ({ gun, onClose }) => {
     <div className="fixed inset-0 flex justify-center items-center z-50">
       <div className="bg-primaryBrown text-white p-4 rounded-3xl w-2/6 h-1/2 flex flex-col">
         <div className="flex flex-row justify-between h-1/2">
-          <div className="w-2/3 justify-center items-center bg-gray-700 rounded-2xl overflow-hidden">
-            {/* Afficher Unity seulement après le clic sur le bouton Play */}
-            <UnityPlayer unityUrl="/WebGL Builds/index.html"/>
+          <div className="w-2/3 flex justify-center items-center bg-gray-700 rounded-2xl overflow-hidden relative">
+            {/* Ensure UnityPlayer fills its container */}
+            <UnityPlayer unityUrl="/WebGL Builds/index.html" />
           </div>
 
           <div className="w-1/2 flex flex-col pl-6">
             <div className="flex justify-center items-center relative">
-              <h2 className="text-2xl font-bold mb-2 font-title text-black">{gun.name_weapon}</h2>
+              <h2 className="text-3xl font-bold mb-2 font-title text-black">{gun.name_weapon}</h2>
               <button
                 onClick={onClose}
-                className="absolute top-0 right-0 bg-red-500 font-bold p-2 rounded-full hover:bg-red-600"
+                className="absolute top-0 right-0 bg-primaryDark font-bold w-10 h-10 flex items-center justify-center rounded-full hover:bg-primaryPale"
               >
-                x
+                X
               </button>
             </div>
-            {/* Utilisation de la clé de description avec t() */}
             <p className="text-md text-black mt-5 font-secondary">{t(gun.description)}</p>
           </div>
         </div>
 
-        {/* Informations sur l'arme */}
+        {/* Gun Details */}
         <div className="h-1/2">
           <ul className="space-y-1 text-sm mt-10">
             <li className="text-lg text-black">{t("caliber")} : {gun.weapon_caliber}</li>

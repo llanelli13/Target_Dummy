@@ -38,6 +38,7 @@ export const getUserById = async (id) => {
 // Modifier un utilisateur
 export const modifyUser = async (id, updates) => {
     try {
+        console.log("updates", updates);
         const response = await axios.put(`${BASE_URL}/${id}`, updates);
         return response.data;
     } catch (error) {
