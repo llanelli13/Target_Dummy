@@ -41,7 +41,7 @@ const LoginPage = () => {
         });
         if (response.user) {
           setUserID(response.id);
-          navigate("/shot");
+          navigate("/leaderboard");
         }
       }
     } catch (err) {

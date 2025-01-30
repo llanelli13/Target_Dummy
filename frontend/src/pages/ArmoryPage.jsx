@@ -10,6 +10,7 @@ const ArmoryPage = () => {
   const [filterType, setFilterType] = useState(""); 
   const [loading, setLoading] = useState(true); 
   const [error, setError] = useState(null); 
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchGuns = async () => {
@@ -38,10 +39,11 @@ const ArmoryPage = () => {
     setFilterType(type);
   };
 
-  const filteredGuns = filterType
-    ? guns.filter((gun) => gun.weapon_type === filterType)
-    : guns;
-
+  const filteredGuns = guns.filter(
+    (gun) =>
+      (filterType === "" || gun.weapon_type === filterType) &&
+      (searchQuery === "" || gun.name_weapon.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
   if (loading) return <p>Chargement des armes...</p>;
   if (error) return <p>{error}</p>;
 
@@ -53,7 +55,12 @@ const ArmoryPage = () => {
         }`}
       >
         <div className="w-full">
-          <SearchBar filterType={filterType} onTypeChange={handleTypeChange} />
+          <SearchBar
+            filterType={filterType}
+            onTypeChange={handleTypeChange}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+          />
         </div>
 
         <div className="flex flex-wrap gap-12">

@@ -13,7 +13,7 @@ const Header = () => {
   return (
     <header className="sticky top-0 flex justify-between items-center bg-primaryBrown p-4 rounded-b-2xl z-50">
       <Link
-        to="/shot"
+        to="/leaderboard"
         className="flex items-center space-x-2"
         onClick={() => handleButtonClick("Votre tir")}
       >

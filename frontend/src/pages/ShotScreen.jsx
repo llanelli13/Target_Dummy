@@ -112,14 +112,13 @@ const ShotScreen = () => {
         </div>
 
         <div className="flex flex-col md:flex-row gap-6">
-          <div className="flex-grow w-2/3 h-auto">
-            {/* <UnityPlayer unityUrl="/WebGL Builds Shoot/shot.html" /> */}
+          <div className="flex-grow w-2/3 h-[calc(100vh-200px)]">
+            <UnityPlayer unityUrl="/WebGL Builds Shoot/shot.html" />
           </div>
 
-          <div className="flex flex-col space-y-6 md:w-1/3 bg-primaryBrown rounded-2xl p-6">
+          <div className="flex flex-col space-y-6 md:w-1/3 md:h-1/2 bg-primaryBrown rounded-2xl p-6">
             <InfoBox icon="🎯" titleKey="precision" value={precision} />
-            <InfoBox icon="🏹" titleKey="speed" value={speed} />
-            <InfoBox icon="📐" titleKey="angle" value={angle} />
+            <InfoBox icon="🏹" titleKey="precision_shot" value={speed} />
             <InfoBox icon="⭐" titleKey="score" value={`${score}`} />
           </div>
         </div>

@@ -1,6 +1,7 @@
 {
     "welcome": "Bienvenue sur Target Dummy :",
     "precision": "Précision",
+    "precision_shot": "Précision du tir",
     "speed": "Vitesse",
     "angle": "Angle",
     "score": "Score",
