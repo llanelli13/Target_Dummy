@@ -7,7 +7,8 @@ const UnityPlayer = ({ unityUrl }) => {
         src={unityUrl}
         title="Unity WebGL"
         className="w-full h-full absolute top-0 left-0"
-        style={{ border: 'none' }}
+        style={{ border: 'none', overflow: "hidden" }}
+        scrolling='no'
       />
     </div>
   );
