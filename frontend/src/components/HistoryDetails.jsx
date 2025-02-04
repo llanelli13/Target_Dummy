@@ -54,23 +54,34 @@ const calculateStats = (sequenceData) => {
   // Précision par cible
   const targetStats = Object.keys(shotsByTargetHit).reduce((acc, target) => {
     const targetShots = sequenceData.filter((shot) => shot.target_hit === target);
+
+    if (targetShots.length === 0) {
+      acc[target] = { count: 0, precision: "0" }; // Valeurs par défaut si aucune donnée
+      return acc;
+    }
+
     const precision = targetShots.reduce((sum, shot) => {
       const xPrecision = 1 - Math.abs(shot.position_x);
       const yPrecision = 1 - Math.abs(shot.position_y);
       return sum + (xPrecision + yPrecision) / 2;
     }, 0);
+
     acc[target] = {
       count: targetShots.length,
-      precision: (precision / targetShots.length).toFixed(2) || "0",
+      precision: (precision / targetShots.length).toFixed(2), // Évite la division par 0
     };
+
     return acc;
   }, {});
 
   // Score global
-  const globalScore = (
-    Object.values(targetStats).reduce((sum, target) => sum + parseFloat(target.precision), 0) /
-    Object.keys(targetStats).length
-  ).toFixed(2);
+  const globalScore =
+  Object.keys(targetStats).length > 0
+    ? (
+        Object.values(targetStats).reduce((sum, target) => sum + parseFloat(target.precision), 0) /
+        Object.keys(targetStats).length
+      ).toFixed(2)
+    : "0.00";
 
   return {
     totalShots,
@@ -167,11 +178,13 @@ const HistoryDetails = ({ session, onClose }) => {
           <li>Tirs manqués : {stats.missedShots}</li>
           <li>
             Meilleur tir :{" "}
-            {stats.bestShot && (
+            {stats.bestShot ? (
               <>
-                à ({stats.bestShot.position_x.toFixed(2)},{" "}
-                {stats.bestShot.position_y.toFixed(2)})
+                à ({(stats.bestShot.position_x ?? 0).toFixed(2)},{" "}
+                {(stats.bestShot.position_y ?? 0).toFixed(2)})
               </>
+            ) : (
+              "Aucun tir disponible"
             )}
           </li>
         </ul>
