@@ -3,7 +3,6 @@ import UnityPlayer from './UnityPlayer';
 
 const GunDetails = ({ gun, onClose }) => {
   const { t } = useTranslation("armory");
-  console.log("info :", gun)
   const unityURL = `/${gun.name_weapon}_Inspect/Inspect/index.html`
 
   return (

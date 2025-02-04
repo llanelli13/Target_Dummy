@@ -4,7 +4,7 @@ import UnityPlayer from '../components/UnityPlayer';
 import InfoBox from '../components/InfoBox';
 import { useTranslation } from 'react-i18next';
 import TargetComponent from '../components/TargetComponent';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { createShotSequence } from '../api/shotSequenceAPI';
 import { useMode } from '../context/ModeContext';
 
@@ -17,10 +17,12 @@ const ShotScreen = () => {
   const [speed, setSpeed] = useState('0 m/s');
   const [angle, setAngle] = useState('0°');
   const { mode } = useMode();
+  const [ unityURL, setUnityUrl] = useState('')
+  const [sequenceData, setSequenceData] = useState([])
 
   const [heartImpacts, setHeartImpacts] = useState([{ x: -0.20, y: 4.5 }, { x: 0.10, y: -0.15 }])
   const [headImpacts, setHeadImpacts] = useState([]);
-  const [stomachImpacts, setStomachImpacts] = useState([{ x: -0.9, y: -1.6 }, { x: -0.15, y: 3.5 }]);
+  const [stomachImpacts, setStomachImpacts] = useState([]);
   const headSocketRef = useRef(null)
   const stomachSocketRef = useRef(null)
 
@@ -40,10 +42,12 @@ const ShotScreen = () => {
       console.log("head data", data)
     
       setHeadImpacts((prev) => [...prev, {x: data.x, y:data.y}])
+      setSequenceData(prevData => [...prevData, {position: data, target: 'Head', target_hit:"Head"}])
+      setUnityUrl(determineUnityUrl(sessionData.arme, "Head"))
     });
 
       // Connection for stomach target
-    stomachSocketRef.current = new WebSocket('ws://192.168.7.2:81');
+    stomachSocketRef.current = new WebSocket('ws://192.168.7.211:81');
     console.log("Established stomach socket", stomachSocketRef.current);
 
     window.stomachSocketRef = stomachSocketRef;
@@ -57,6 +61,8 @@ const ShotScreen = () => {
       console.log("stomach data", data);
       
       setStomachImpacts((prev) => [...prev, { x: data.x, y: data.y }]);
+      setSequenceData(prevData => [...prevData, {position: data, target: 'Stomach', target_hit:"Stomach"}])
+      setUnityUrl(determineUnityUrl(sessionData.arme, "Stomach"))
     });
 
     return () => {
@@ -65,6 +71,22 @@ const ShotScreen = () => {
     };
   };
 
+  const determineUnityUrl = (arme, impactLocation) => {
+    if (arme === "AWP" && impactLocation === "Stomach") {
+      return '/AWP_Tir/Tir/Torse/index.html'
+    } else if (arme === "AWP" && impactLocation === "Head") {
+      return '/AWP_Tir/Tir/HS/index.html'
+    } else if (arme === "M4A4" && impactLocation === "Stomach") {
+      return '/M4A4_Tir/Tir/Torse/index.html'
+    } else if (arme === "M4A4" && impactLocation === "Head") {
+      return '/M4A4_Tir/Tir/HS/index.html'
+    } else if (arme === "Glock 23" && impactLocation === "Stomach") {
+      return '/Glock 23_Tir/Tir/Torse/index.html'
+    } else if (arme === "Glock 23" && impactLocation === "Head") {
+      return '/Glock 23_Tir/Tir/HS/index.html'
+    }
+  }
+
   const closeConnection = () => {
     if (headSocketRef.current || stomachSocketRef.current) {
       headSocketRef.current.close();
@@ -72,14 +94,6 @@ const ShotScreen = () => {
       console.log("WebSocket connection closed");
     }
   };
-
-
-
-  const sequenceData = [
-    {position: 0.5, target: 'heart', target_hit: 'heart'},
-    {position: 0.9, target: 'heart', target_hit: 'left_shoulder'},
-    {position: 0.2, target: 'head', target_hit: 'head'},
-  ]
 
   const handleEndSession = async () => {
 
@@ -94,10 +108,10 @@ const ShotScreen = () => {
       sequence_data: sequenceData
     };
 
-
     try {
       await createShotSequence(shotSequenceData);
       endSession();
+      setUnityUrl("")
       setHeadImpacts([])
       setHeartImpacts([])
       setStomachImpacts([])
@@ -126,7 +140,14 @@ const ShotScreen = () => {
 
         <div className="flex flex-col md:flex-row gap-6">
           <div className="flex-grow w-2/3 h-[calc(85vh-220px)]">
-            <UnityPlayer unityUrl="/WebGL Builds Shoot/index.html" />
+            {unityURL ? (
+              <UnityPlayer unityUrl={unityURL} />
+            ) : (
+              <div className="flex items-center justify-center h-full text-lg font-bold">
+                En attente de votre tir
+              </div>
+            )
+            }
           </div>
 
           <div className="flex flex-col space-y-6 md:w-1/3 md:h-1/2 bg-primaryBrown rounded-2xl p-6">
@@ -159,8 +180,6 @@ const ShotScreen = () => {
       )}
     </div>
   );
-};
+}
 
 export default ShotScreen;
-
-
