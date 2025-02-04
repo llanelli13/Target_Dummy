@@ -3,6 +3,8 @@ import UnityPlayer from './UnityPlayer';
 
 const GunDetails = ({ gun, onClose }) => {
   const { t } = useTranslation("armory");
+  console.log("info :", gun)
+  const unityURL = `/${gun.name_weapon}_Inspect/Inspect/index.html`
 
   return (
     <div className="fixed inset-0 flex justify-center items-center z-50">
@@ -10,7 +12,7 @@ const GunDetails = ({ gun, onClose }) => {
         <div className="flex flex-row justify-between h-1/2">
           <div className="w-2/3 flex justify-center items-center bg-gray-700 rounded-2xl overflow-hidden relative">
             {/* Ensure UnityPlayer fills its container */}
-            <UnityPlayer unityUrl="/WebGL Builds/index.html" />
+            <UnityPlayer unityUrl={unityURL} />
           </div>
 
           <div className="w-1/2 flex flex-col pl-6">

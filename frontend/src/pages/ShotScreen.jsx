@@ -21,41 +21,54 @@ const ShotScreen = () => {
   const [heartImpacts, setHeartImpacts] = useState([{ x: -0.20, y: 4.5 }, { x: 0.10, y: -0.15 }])
   const [headImpacts, setHeadImpacts] = useState([]);
   const [stomachImpacts, setStomachImpacts] = useState([{ x: -0.9, y: -1.6 }, { x: -0.15, y: 3.5 }]);
-  const socketRef = useRef(null)
+  const headSocketRef = useRef(null)
+  const stomachSocketRef = useRef(null)
 
   const openConnection = () => {
-    socketRef.current = new WebSocket('ws://192.168.7.1:81');
-    console.log("Established", socketRef.current);
+    // Connection pour head
+    headSocketRef.current = new WebSocket('ws://192.168.7.1:81');
+    console.log("Established head socket", headSocketRef.current);
 
-    window.socketRef = socketRef;
+    window.headSocketRef = headSocketRef;
 
-    socketRef.current.addEventListener('open', function () {
-      console.log("WebSocket connection established");
+    headSocketRef.current.addEventListener('open', function () {
+      console.log("WebSocket connection for head established");
     });
 
-    socketRef.current.addEventListener('message', function (event) {
+    headSocketRef.current.addEventListener('message', function (event) {
       const data = JSON.parse(event.data);
-      console.log("data", data)
+      console.log("head data", data)
     
       setHeadImpacts((prev) => [...prev, {x: data.x, y:data.y}])
-    
-      // if (data.target === 'heart') {
-      //   setHeartImpacts((prev) => [...prev, { x: data.x, y: data.y }]);
-      // } else if (data.target === 'head') {
-      //   setHeadImpacts((prev) => [...prev, { x: data.x, y: data.y }]);
-      // } else if (data.target === 'stomach') {
-      //   setStomachImpacts((prev) => [...prev, { x: data.x, y: data.y }]);
-      // }
+    });
+
+      // Connection for stomach target
+    stomachSocketRef.current = new WebSocket('ws://192.168.7.2:81');
+    console.log("Established stomach socket", stomachSocketRef.current);
+
+    window.stomachSocketRef = stomachSocketRef;
+
+    stomachSocketRef.current.addEventListener('open', function () {
+      console.log("WebSocket connection for stomach established");
+    });
+
+    stomachSocketRef.current.addEventListener('message', function (event) {
+      const data = JSON.parse(event.data);
+      console.log("stomach data", data);
+      
+      setStomachImpacts((prev) => [...prev, { x: data.x, y: data.y }]);
     });
 
     return () => {
-      socketRef.current.close();
+      headSocketRef.current.close();
+      stomachSocketRef.current.close()
     };
   };
 
   const closeConnection = () => {
-    if (socketRef.current) {
-      socketRef.current.close();
+    if (headSocketRef.current || stomachSocketRef.current) {
+      headSocketRef.current.close();
+      stomachSocketRef.current.close();
       console.log("WebSocket connection closed");
     }
   };
@@ -113,7 +126,7 @@ const ShotScreen = () => {
 
         <div className="flex flex-col md:flex-row gap-6">
           <div className="flex-grow w-2/3 h-[calc(85vh-220px)]">
-            <UnityPlayer unityUrl="/WebGL Builds Shoot/shot.html" />
+            <UnityPlayer unityUrl="/WebGL Builds Shoot/index.html" />
           </div>
 
           <div className="flex flex-col space-y-6 md:w-1/3 md:h-1/2 bg-primaryBrown rounded-2xl p-6">
