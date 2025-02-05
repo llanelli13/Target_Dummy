@@ -23,8 +23,8 @@ const TargetComponent = ({ impacts }) => {
         {impacts.map((impact, index) => (
           <circle
             key={index}
-            cx={impact.x * 7}
-            cy={impact.y * 7}
+            cx={impact.x * 5}
+            cy={impact.y * 5}
             r="2"
             fill="red"
           />

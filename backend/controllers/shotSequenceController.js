@@ -14,7 +14,8 @@ exports.createShotSequence = async (req, res) => {
             location,
             sequence_data: req.body.sequence_data.map((data) => {
                 return {
-                    position: data.position,
+                    position_x: data.position_x,
+                    position_y: data.position_y,
                     target_hit: data.target_hit,
                     target: data.target,
                 };

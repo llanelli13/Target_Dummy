@@ -42,7 +42,7 @@ const ShotScreen = () => {
       console.log("head data", data)
     
       setHeadImpacts((prev) => [...prev, {x: data.x, y:data.y}])
-      setSequenceData(prevData => [...prevData, {position: data, target: 'Head', target_hit:"Head"}])
+      setSequenceData(prevData => [...prevData, {position_x: data.x/7, position_y:data.y/7,  target: 'Head', target_hit:"Head"}])
       setUnityUrl(determineUnityUrl(sessionData.arme, "Head"))
     });
 
@@ -60,8 +60,8 @@ const ShotScreen = () => {
       const data = JSON.parse(event.data);
       console.log("stomach data", data);
       
-      setStomachImpacts((prev) => [...prev, { x: data.x, y: data.y }]);
-      setSequenceData(prevData => [...prevData, {position: data, target: 'Stomach', target_hit:"Stomach"}])
+      setStomachImpacts((prev) => [...prev, {x: data.x, y:data.y}])
+      setSequenceData(prevData => [...prevData, {position_x: data.x/7, position_y:data.y/7, target: 'Stomach', target_hit:"Stomach"}])
       setUnityUrl(determineUnityUrl(sessionData.arme, "Stomach"))
     });
 
@@ -167,7 +167,7 @@ const ShotScreen = () => {
             <TargetComponent impacts={headImpacts} />
           </div>
           <div className="flex flex-col items-center space-y-2">
-            <span className="text-white font-secondary font-semibold">{mode === "Military" ? t('stomach') : t('target2')}</span>
+            <span className="text-white font-secondary font-semibold">{mode === "Military" ? t('stomach') : t('target3')}</span>
             <TargetComponent impacts={stomachImpacts} />
           </div>
         </div>

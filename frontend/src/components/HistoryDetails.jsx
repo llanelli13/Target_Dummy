@@ -253,7 +253,7 @@ const HistoryDetails = ({ session, onClose }) => {
       {Object.entries(stats.targetStats).map(([target, data]) => (
         <div key={target} className="history-details-section">
           <h3>Statistiques pour {target} :</h3>
-          <p>Précision moyenne : {data.precision}%</p>
+          <p>Précision moyenne : {data.precision*100}%</p>
           <div className="history-details-chart">
             <Scatter
               data={{
@@ -285,7 +285,7 @@ const HistoryDetails = ({ session, onClose }) => {
       {/* Score global */}
       <div className="history-details-section">
         <h3>Score global de la session :</h3>
-        <p className="history-details-score">{stats.globalScore}%</p>
+        <p className="history-details-score">{Math.floor(stats.globalScore*100)}%</p>
       </div>
     </div>
   );
