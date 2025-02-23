@@ -11,5 +11,11 @@
     "head": "Head",
     "target1": "Target 1",
     "target2": "Target 2",
-    "target3": "Target 3"
+    "target3": "Target 3",
+    "target4": "Target 4",
+    "sessionPrecision": "Session precision",
+    "heartPrecision": "Heart precision",
+    "stomachPrecision": "Stomach precision",
+    "headPrecision": "Head precision",
+    "shoulderPrecision": "Shoulder precision"
 }

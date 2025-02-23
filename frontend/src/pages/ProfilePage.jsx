@@ -207,9 +207,9 @@ const ProfilePage = () => {
           <EditableField label={t("password")} value="********" onSave={(val) => handleUpdate("password", val)} />
 
           {/* Bouton suppression */}
-          <button className="bg-red-600 text-white px-6 py-2 rounded-full hover:bg-red-700">
+          {/* <button className="bg-red-600 text-white px-6 py-2 rounded-full hover:bg-red-700">
             {t("delete_history")}
-          </button>
+          </button> */}
         </div>
 
         {/* <ProfileStats /> */}

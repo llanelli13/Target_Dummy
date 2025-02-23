@@ -24,6 +24,7 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("data:", userData)
 
     if (isSignup && userData.password !== userData.confirmPassword) {
       setError("Les mots de passe ne correspondent pas !");

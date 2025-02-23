@@ -11,5 +11,11 @@
     "head": "Tête",
     "target1": "Cible 1",
     "target2": "Cible 2",
-    "target3": "Cible 3"
+    "target3": "Cible 3",
+    "target4": "Cible 4",
+    "sessionPrecision": "Précision de la session",
+    "heartPrecision": "Précision du coeur",
+    "stomachPrecision": "Précision du ventre",
+    "headPrecision": "Précision de la tête",
+    "shoulderPrecision": "Précision de l'épaule"
 }
