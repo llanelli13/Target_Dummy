@@ -10,7 +10,7 @@ const SessionComponent = ({ onClose }) => {
   const [loading, setLoading] = useState(true);
   const { setSessionData } = useSession();
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleString());
-  const [modeTir, setModeTir] = useState('Tir standard');
+  const [modeTir, setModeTir] = useState('Competitive');
   const [selectedGunId, setSelectedGunId] = useState('');
 
   useEffect(() => {
@@ -84,8 +84,8 @@ const SessionComponent = ({ onClose }) => {
                 onChange={(e) => setModeTir(e.target.value)}
                 className="bg-primaryPale text-black font-title font-semibold rounded-full px-2 py-2 focus:outline-none w-full"
               >
-                <option value="Tir standard">{t("STD_shot")}</option>
-                <option value="Tir Interactif">{t("INT_shot")}</option>
+                <option value="Standard">{t("STD_shot")}</option>
+                <option value="Competitive">{t("INT_shot")}</option>
               </select>
             </div>
 

@@ -17,5 +17,7 @@
     "heartPrecision": "Heart precision",
     "stomachPrecision": "Stomach precision",
     "headPrecision": "Head precision",
-    "shoulderPrecision": "Shoulder precision"
+    "shoulderPrecision": "Shoulder precision",
+    "shotPrecision": "Shot precision",
+    "shotStability": "Shot stability"
 }

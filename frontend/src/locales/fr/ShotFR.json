@@ -17,5 +17,7 @@
     "heartPrecision": "Précision du coeur",
     "stomachPrecision": "Précision du ventre",
     "headPrecision": "Précision de la tête",
-    "shoulderPrecision": "Précision de l'épaule"
+    "shoulderPrecision": "Précision de l'épaule",
+    "shotPrecision": "Précision du tir",
+    "shotStability": "Stabilité du tir"
 }

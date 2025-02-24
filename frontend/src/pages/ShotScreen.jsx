@@ -8,40 +8,37 @@ import { useState, useRef, useEffect } from 'react';
 import { createShotSequence } from '../api/shotSequenceAPI';
 import { useMode } from '../context/ModeContext';
 
-// Composant Graphique (placeholder)
-const Graph = () => (
-  <div className="w-full h-full flex items-center justify-center bg-white border border-gray-300 rounded-md">
-    Graphique
-  </div>
-);
 
 const ShotScreen = () => {
   const { t } = useTranslation('shot');
   const { isSessionOpen, startSession, endSession, sessionData, userID } = useSession();
   const [user, setUser] = useState(null);
   const [score, setScore] = useState(0);
-  const [precision, setPrecision] = useState('0%');
+  // const [precision, setPrecision] = useState('0%'); 
+  // const [speed, setSpeed] = useState('0 m/s');
+  // const [angle, setAngle] = useState('0°');
   const [sessionPrecision, setSessionPrecision] = useState('0%');
-  const [speed, setSpeed] = useState('0 m/s');
-  const [angle, setAngle] = useState('0°');
   const { mode } = useMode();
   const [unityURL, setUnityUrl] = useState('');
   const [sequenceData, setSequenceData] = useState([]);
 
   // Impacts pour chaque cible
   const [heartImpacts, setHeartImpacts] = useState([{ x: -0.20, y: 2.5 }, { x: 0.10, y: -0.15 }]);
-  const [headImpacts, setHeadImpacts] = useState([{x:3, y: 0}]);
+  const [headImpacts, setHeadImpacts] = useState([{x:0, y:5.8}]);
   const [stomachImpacts, setStomachImpacts] = useState([{x: 0, y: 0}, {x: 1, y: 2}]);
-  // Extra cible (placeholder)
   const extraImpacts = [];
+
+  const URL_HeadSocket = "ws://192.168.7.1:81"
+  const URL_StomachSocket = 'ws://192.168.7.211:81'
+  // const URL_RightShoulderSocket = 'ws://'
+  // const URL_LeftShoulderSocket = 'ws://'
+  // const URL_M4A4Socket = 'ws://'
 
   const headSocketRef = useRef(null);
   const stomachSocketRef = useRef(null);
 
-  // Valeur maximale pour considérer un tir comme précis (modifiable)
-  const MAX_DISTANCE = 5;
+  const MAX_DISTANCE = 7;
 
-  // Calcul de la précision d'un tir en fonction de la distance (0,0) de la cible
   const computeShotPrecision = (shot, maxDistance = MAX_DISTANCE) => {
     const d = Math.sqrt(shot.x * shot.x + shot.y * shot.y);
     let shotPrecision = 100 - (d / maxDistance * 100);
@@ -49,7 +46,6 @@ const ShotScreen = () => {
     return shotPrecision;
   };
 
-  // Calcul de la précision moyenne pour un ensemble d'impacts
   const calculatePrecision = (impacts, maxDistance = MAX_DISTANCE) => {
     if (impacts.length === 0) return 0;
     const total = impacts.reduce((sum, shot) => sum + computeShotPrecision(shot, maxDistance), 0);
@@ -72,17 +68,26 @@ const ShotScreen = () => {
     }
   }, [heartImpacts, headImpacts, stomachImpacts, extraImpacts]);
 
+  useEffect(() => {
+    if (isSessionOpen) {
+      openConnection();
+    }
+    return () => {
+      closeConnection();
+    };
+  }, [isSessionOpen]);
+
   const openConnection = () => {
     // Connection pour la cible "head"
-    headSocketRef.current = new WebSocket('ws://192.168.7.1:81');
-    console.log("Established head socket", headSocketRef.current);
+    headSocketRef.current = new WebSocket(URL_HeadSocket);
+    console.log("Connexion en cours à", URL_HeadSocket);
     window.headSocketRef = headSocketRef;
 
     headSocketRef.current.addEventListener('open', function () {
       console.log("WebSocket connection for head established");
     });
 
-    headSocketRef.current.addEventListener('message', function (event) {
+    headSocketRef.current.addEventListener('message', (event) => {
       const data = JSON.parse(event.data);
       console.log("head data", data);
       setHeadImpacts((prev) => [...prev, { x: data.x, y: data.y }]);
@@ -91,11 +96,20 @@ const ShotScreen = () => {
         { position_x: data.x / 7, position_y: data.y / 7, target: 'Head', target_hit: "Head" }
       ]);
       setUnityUrl(determineUnityUrl(sessionData.arme, "Head"));
+
+      if (mode === "Competitive" && shotInProgress && currentTarget === "Head") {
+        shotHit(data);
+      } else if (mode === "Competitive" && shotInProgress && currentTarget !== "Head") {
+        // Tir sur mauvaise cible (exemple)
+        shotWrongTarget(data, "Head");
+      }
+
     });
 
+
     // Connection pour la cible "stomach"
-    stomachSocketRef.current = new WebSocket('ws://192.168.7.211:81');
-    console.log("Established stomach socket", stomachSocketRef.current);
+    stomachSocketRef.current = new WebSocket(URL_StomachSocket);
+    console.log("Connexion en cours à", URL_StomachSocket);
     window.stomachSocketRef = stomachSocketRef;
 
     stomachSocketRef.current.addEventListener('open', function () {
@@ -111,6 +125,11 @@ const ShotScreen = () => {
         { position_x: data.x / 7, position_y: data.y / 7, target: 'Stomach', target_hit: "Stomach" }
       ]);
       setUnityUrl(determineUnityUrl(sessionData.arme, "Stomach"));
+      if (mode === "Competitive" && shotInProgress && currentTarget === "Stomach") {
+        shotHit(data);
+      } else if (mode === "Competitive" && shotInProgress && currentTarget !== "Stomach") {
+        shotWrongTarget(data, "Stomach");
+      }
     });
 
     return () => {
@@ -143,7 +162,138 @@ const ShotScreen = () => {
     }
   };
 
+  // ---------------------------
+  // Partie mode jeu compétitif
+  // (Cette logique ne s'exécute que si mode === "Competitive")
+  // ---------------------------
+  const [gameShotCount, setGameShotCount] = useState(0);
+  const [currentTarget, setCurrentTarget] = useState(null);
+  const [shotStartTime, setShotStartTime] = useState(null);
+  const [shotInProgress, setShotInProgress] = useState(false);
+  const shotTimerRef = useRef(null);
+
+  // Démarrage du mode compétitif lors de l'ouverture de la session
+  useEffect(() => {
+    if (isSessionOpen && mode === "Competitive") {
+      setTimeout(() => {
+        startGameMode();
+      }, 1000);
+    }
+  }, [isSessionOpen, mode]);
+
+  const sendLEDMessage = (target, command) => {
+    const message = JSON.stringify({ command });
+    switch (target) {
+      case "Head":
+        if (headSocketRef.current && headSocketRef.current.readyState === WebSocket.OPEN) {
+          headSocketRef.current.send(message);
+        }
+        break;
+      case "Stomach":
+        if (stomachSocketRef.current && stomachSocketRef.current.readyState === WebSocket.OPEN) {
+          stomachSocketRef.current.send(message);
+        }
+        break;
+      case "Heart":
+        console.log(`Simulated send to Heart: ${message}`);
+        break;
+      case "Extra":
+        console.log(`Simulated send to Extra: ${message}`);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const startGameMode = () => {
+    // Si le mode n'est pas compétitif, ne rien faire
+    if (mode !== "Competitive") return;
+    setGameShotCount(0);
+    nextShot();
+  };
+
+  const nextShot = () => {
+    if (gameShotCount >= 10) {
+      handleEndSession();
+      return;
+    }
+    // Sélection aléatoire d'une cible parmi 4
+    const targets = ["Heart", "Head", "Stomach", "Extra"];
+    const selectedTarget = targets[Math.floor(Math.random() * targets.length)];
+    setCurrentTarget(selectedTarget);
+    console.log("Prochain tir sur la cible :", selectedTarget);
+
+    // Envoi du message pour allumer les LEDs uniquement en mode compétitif
+    sendLEDMessage(selectedTarget, "LED_ON");
+
+    setShotStartTime(Date.now());
+    setShotInProgress(true);
+
+    // Timer de 3 secondes
+    shotTimerRef.current = setTimeout(() => {
+      if (shotInProgress) {
+        shotMissed();
+      }
+    }, 3000);
+  };
+
+  const shotHit = (data) => {
+    if (shotTimerRef.current) clearTimeout(shotTimerRef.current);
+    const reactionTime = Date.now() - shotStartTime;
+    console.log("Tir réussi sur", currentTarget, "!", "Temps de réaction :", reactionTime, "ms");
+    const shotScore = reactionTime <= 3000 ? (3000 - reactionTime) : 0;
+    setScore(prev => prev + shotScore);
+
+    // Éteindre la LED de la cible courante
+    sendLEDMessage(currentTarget, "LED_OFF");
+
+    setShotInProgress(false);
+    setGameShotCount(prev => prev + 1);
+
+    setTimeout(() => {
+      nextShot();
+    }, 1000);
+  };
+
+  const shotWrongTarget = (data, receivedTarget) => {
+    if (shotTimerRef.current) clearTimeout(shotTimerRef.current);
+    console.log(`Tir sur mauvaise cible : ${receivedTarget} reçu alors que ${currentTarget} était attendu – Score: 0`);
+    // Enregistrement de la séquence avec score 0 (optionnel)
+    setSequenceData(prev => [
+      ...prev,
+      {
+        position_x: data.x / 7,
+        position_y: data.y / 7,
+        target: currentTarget,
+        target_hit: receivedTarget,
+        score: 0
+      }
+    ]);
+    sendLEDMessage(currentTarget, "LED_OFF");
+    setShotInProgress(false);
+    setGameShotCount(prev => prev + 1);
+    setTimeout(() => {
+      nextShot();
+    }, 1000);
+  };
+
+  const shotMissed = () => {
+    console.log("Tir manqué sur la cible :", currentTarget);
+    sendLEDMessage(currentTarget, "LED_OFF");
+    setShotInProgress(false);
+    setGameShotCount(prev => prev + 1);
+    setTimeout(() => {
+      nextShot();
+    }, 1000);
+  };
+
+  // ---------------------------
+  // Fin partie mode compétitif
+  // ---------------------------
+
   const handleEndSession = async () => {
+    if (shotTimerRef.current) clearTimeout(shotTimerRef.current);
+    closeConnection();
     const shotSequenceData = {
       sequence_date: new Date(sessionData?.dateHeure).toISOString(),
       ID_weapon: sessionData?.idWeapon,
@@ -159,9 +309,9 @@ const ShotScreen = () => {
       endSession();
       setUnityUrl("");
       setHeadImpacts([]);
-      setHeartImpacts([]); // Si vous avez une cible "heart" en état, sinon vous pouvez l'omettre
+      setHeartImpacts([]); 
       setStomachImpacts([]);
-      closeConnection();
+      
     } catch (err) {
       console.error('Erreur lors de l\'enregistrement de la séquence de tir', err);
     }
@@ -170,7 +320,7 @@ const ShotScreen = () => {
   return (
     <div className='relative'>
       <div className={`space-y-6 ${!isSessionOpen ? 'blur-sm pointer-events-none' : ''}`}>
-        <button onClick={openConnection}>Open Connection</button>
+        {/* <button onClick={openConnection}>Open Connection</button> */}
         <div className="flex justify-between items-center bg-primaryBrown p-4 rounded-2xl text-black font-bold font-secondary text-lg">
           <p>{t('welcome')} {user?.user_firstname} !</p>
           <button
@@ -239,7 +389,10 @@ const ShotScreen = () => {
               <InfoBox icon="📊" titleKey="sessionPrecision" value={sessionPrecision} />
             </div>
             <div className="flex-1">
-              <Graph />
+              <InfoBox icon="📊" titleKey="shotPrecision" value="80%" />
+            </div>
+            <div className="flex-1">
+              <InfoBox icon="📊" titleKey="shotStability" value="0%" />
             </div>
           </div>
         </div>
