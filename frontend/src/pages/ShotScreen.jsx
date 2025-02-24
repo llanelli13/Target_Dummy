@@ -22,20 +22,24 @@ const ShotScreen = () => {
   const [unityURL, setUnityUrl] = useState('');
   const [sequenceData, setSequenceData] = useState([]);
 
+  
   // Impacts pour chaque cible
-  const [heartImpacts, setHeartImpacts] = useState([{ x: -0.20, y: 2.5 }, { x: 0.10, y: -0.15 }]);
   const [headImpacts, setHeadImpacts] = useState([{x:0, y:5.8}]);
   const [stomachImpacts, setStomachImpacts] = useState([{x: 0, y: 0}, {x: 1, y: 2}]);
-  const extraImpacts = [];
+  const [RSImpacts, setRSImpacts] = useState([]);
+  const [LSImpacts, setLSImpacts] = useState([]);
 
   const URL_HeadSocket = "ws://192.168.7.1:81"
   const URL_StomachSocket = 'ws://192.168.7.211:81'
-  // const URL_RightShoulderSocket = 'ws://'
-  // const URL_LeftShoulderSocket = 'ws://'
-  // const URL_M4A4Socket = 'ws://'
+  const URL_RightShoulderSocket = 'ws://192.168.7.211:82' // A modifier
+  const URL_LeftShoulderSocket = 'ws://192.168.7.211:83' // A modifier
+  const URL_M4Socket = 'ws://192.168.5.2:8' // A modifier
 
   const headSocketRef = useRef(null);
   const stomachSocketRef = useRef(null);
+  const rightShoulderSocketRef = useRef(null);
+  const leftShoulderSocketRef = useRef(null);
+  const m4SocketRef = useRef(null);
 
   const MAX_DISTANCE = 7;
 
@@ -55,10 +59,10 @@ const ShotScreen = () => {
   // Mise à jour de sessionPrecision : moyenne des précisions des cibles ayant reçu au moins un impact
   useEffect(() => {
     const targetPrecisions = [];
-    if (heartImpacts.length > 0) targetPrecisions.push(calculatePrecision(heartImpacts));
     if (headImpacts.length > 0) targetPrecisions.push(calculatePrecision(headImpacts));
     if (stomachImpacts.length > 0) targetPrecisions.push(calculatePrecision(stomachImpacts));
-    if (extraImpacts.length > 0) targetPrecisions.push(calculatePrecision(extraImpacts));
+    if (RSImpacts.length > 0) targetPrecisions.push(calculatePrecision(RSImpacts));
+    if (LSImpacts.length > 0) targetPrecisions.push(calculatePrecision(LSImpacts));
 
     if (targetPrecisions.length === 0) {
       setSessionPrecision("0%");
@@ -66,7 +70,7 @@ const ShotScreen = () => {
       const avg = Math.round(targetPrecisions.reduce((sum, p) => sum + p, 0) / targetPrecisions.length);
       setSessionPrecision(avg + "%");
     }
-  }, [heartImpacts, headImpacts, stomachImpacts, extraImpacts]);
+  }, [headImpacts, stomachImpacts, RSImpacts, LSImpacts]);
 
   useEffect(() => {
     if (isSessionOpen) {
@@ -100,12 +104,10 @@ const ShotScreen = () => {
       if (mode === "Competitive" && shotInProgress && currentTarget === "Head") {
         shotHit(data);
       } else if (mode === "Competitive" && shotInProgress && currentTarget !== "Head") {
-        // Tir sur mauvaise cible (exemple)
         shotWrongTarget(data, "Head");
       }
 
     });
-
 
     // Connection pour la cible "stomach"
     stomachSocketRef.current = new WebSocket(URL_StomachSocket);
@@ -132,11 +134,76 @@ const ShotScreen = () => {
       }
     });
 
+    // Connection pour la cible "Right shoulder" avec RS pour right shoulder
+    rightShoulderSocketRef.current = new WebSocket(URL_RightShoulderSocket);
+    console.log("Connexion en cours à", URL_RightShoulderSocket);
+    window.rightShoulderSocketRef = rightShoulderSocketRef;
+    
+    rightShoulderSocketRef.current.addEventListener('open', function () {
+      console.log("WebSocket connection for RS established");
+    });
+
+    rightShoulderSocketRef.current.addEventListener('message', (event) => {
+      const data = JSON.parse(event.data);
+      console.log("RS data", data);
+       setRSImpacts((prev) => [...prev, { x: data.x, y: data.y }]);
+       setSequenceData(prevData => [
+         ...prevData,
+         { position_x: data.x / 7, position_y: data.y / 7, target: 'RS', target_hit: "RS" }
+       ]);
+       setUnityUrl(determineUnityUrl(sessionData.arme, "RS"));
+    if (mode === "Competitive" && shotInProgress && currentTarget === "RS") {
+         shotHit(data);
+       } else if (mode === "Competitive" && shotInProgress && currentTarget !== "RS") {
+        shotWrongTarget(data, "RS");
+      }
+    });
+
+
+    // Connection pour la cible "Left shoulder" avec LS pour left shoulder
+    leftShoulderSocketRef.current = new WebSocket(URL_LeftShoulderSocket);
+    console.log("Connexion en cours à", URL_LeftShoulderSocket);
+    window.leftShoulderSocketRef = leftShoulderSocketRef;
+    
+    leftShoulderSocketRef.current.addEventListener('open', function () {
+      console.log("WebSocket connection for LS established");
+    });
+
+    leftShoulderSocketRef.current.addEventListener('message', (event) => {
+      const data = JSON.parse(event.data);
+      console.log("LS data", data);
+       setRSImpacts((prev) => [...prev, { x: data.x, y: data.y }]);
+       setSequenceData(prevData => [
+         ...prevData,
+         { position_x: data.x / 7, position_y: data.y / 7, target: 'LS', target_hit: "LS" }
+       ]);
+       setUnityUrl(determineUnityUrl(sessionData.arme, "LS"));
+    if (mode === "Competitive" && shotInProgress && currentTarget === "LS") {
+         shotHit(data);
+       } else if (mode === "Competitive" && shotInProgress && currentTarget !== "LS") {
+        shotWrongTarget(data, "LS");
+      }
+    });
+    
+    if (sessionData.arme === "M4A4") {
+      m4SocketRef.current = new WebSocket(URL_M4Socket);
+      console.log("Connexion en cours à", URL_M4Socket);
+      window.m4SocketRef = m4SocketRef;
+
+      m4SocketRef.current.addEventListener('open', () => {
+        console.log("WebSocket connection for M4 established");
+      });
+    }
+
     return () => {
       headSocketRef.current.close();
       stomachSocketRef.current.close();
+      rightShoulderSocketRef.current.close();
+      leftShoulderSocketRef.current.close();
+      m4SocketRef.current.close();
     };
   };
+
 
   const determineUnityUrl = (arme, impactLocation) => {
     if (arme === "AWP" && impactLocation === "Stomach") {
@@ -155,11 +222,10 @@ const ShotScreen = () => {
   };
 
   const closeConnection = () => {
-    if (headSocketRef.current || stomachSocketRef.current) {
-      headSocketRef.current.close();
-      stomachSocketRef.current.close();
-      console.log("WebSocket connection closed");
-    }
+    if (headSocketRef.current) headSocketRef.current.close();
+    if (stomachSocketRef.current) stomachSocketRef.current.close();
+    if (m4SocketRef.current) m4SocketRef.current.close();
+    console.log("WebSocket connections closed");
   };
 
   // ---------------------------
@@ -180,6 +246,14 @@ const ShotScreen = () => {
       }, 1000);
     }
   }, [isSessionOpen, mode]);
+
+  const sendM4Impact = (targetName) => {
+    const message = JSON.stringify({ target: targetName });
+    if (m4SocketRef.current && m4SocketRef.current.readyState === WebSocket.OPEN) {
+      m4SocketRef.current.send(message);
+      console.log("Envoyé à la M4 :", message);
+    }
+  };
 
   const sendLEDMessage = (target, command) => {
     const message = JSON.stringify({ command });
@@ -243,13 +317,11 @@ const ShotScreen = () => {
     console.log("Tir réussi sur", currentTarget, "!", "Temps de réaction :", reactionTime, "ms");
     const shotScore = reactionTime <= 3000 ? (3000 - reactionTime) : 0;
     setScore(prev => prev + shotScore);
-
-    // Éteindre la LED de la cible courante
+    // Envoi du nom de la cible touchée sur le WS de la M4
+    sendM4Impact(currentTarget);
     sendLEDMessage(currentTarget, "LED_OFF");
-
     setShotInProgress(false);
     setGameShotCount(prev => prev + 1);
-
     setTimeout(() => {
       nextShot();
     }, 1000);
@@ -258,7 +330,8 @@ const ShotScreen = () => {
   const shotWrongTarget = (data, receivedTarget) => {
     if (shotTimerRef.current) clearTimeout(shotTimerRef.current);
     console.log(`Tir sur mauvaise cible : ${receivedTarget} reçu alors que ${currentTarget} était attendu – Score: 0`);
-    // Enregistrement de la séquence avec score 0 (optionnel)
+    // Envoi du nom de la cible réellement touchée sur le WS de la M4
+    sendM4Impact(receivedTarget);
     setSequenceData(prev => [
       ...prev,
       {
@@ -311,6 +384,8 @@ const ShotScreen = () => {
       setHeadImpacts([]);
       setHeartImpacts([]); 
       setStomachImpacts([]);
+      setRSImpacts([]);
+      setLSImpacts([]);
       
     } catch (err) {
       console.error('Erreur lors de l\'enregistrement de la séquence de tir', err);
@@ -322,7 +397,7 @@ const ShotScreen = () => {
       <div className={`space-y-6 ${!isSessionOpen ? 'blur-sm pointer-events-none' : ''}`}>
         {/* <button onClick={openConnection}>Open Connection</button> */}
         <div className="flex justify-between items-center bg-primaryBrown p-4 rounded-2xl text-black font-bold font-secondary text-lg">
-          <p>{t('welcome')} {user?.user_firstname} !</p>
+          <p>{t('welcome')} !</p>
           <button
             onClick={handleEndSession}
             className="bg-primaryPale text-black px-4 py-2 rounded-full hover:bg-secondaryPale"
@@ -348,25 +423,16 @@ const ShotScreen = () => {
             <div className="w-2/5 grid grid-cols-2 grid-rows-2 gap-6">
               <div className="flex flex-col items-center space-y-2 bg-primaryBrown rounded-2xl p-4">
                 <span className="text-white font-secondary font-semibold">
-                  {mode === "Military" ? t('heart') : t('target1')}
-                </span>
-                <TargetComponent impacts={heartImpacts} />
-                <p className="mt-2 text-sm text-white">
-                  {t('heartPrecision')} : {calculatePrecision(heartImpacts)}%
-                </p>
-              </div>
-              <div className="flex flex-col items-center space-y-2 bg-primaryBrown rounded-2xl p-4">
-                <span className="text-white font-secondary font-semibold">
-                  {mode === "Military" ? t('head') : t('target2')}
+                  {mode === "Military" ? t('head') : t('target1')}
                 </span>
                 <TargetComponent impacts={headImpacts} />
                 <p className="mt-2 text-sm text-white">
-                {t('headPrecision')} {calculatePrecision(headImpacts)}%
+                  {t('headPrecision')} : {calculatePrecision(headImpacts)}%
                 </p>
               </div>
               <div className="flex flex-col items-center space-y-2 bg-primaryBrown rounded-2xl p-4">
                 <span className="text-white font-secondary font-semibold">
-                  {mode === "Military" ? t('stomach') : t('target3')}
+                  {mode === "Military" ? t('stomach') : t('target2')}
                 </span>
                 <TargetComponent impacts={stomachImpacts} />
                 <p className="mt-2 text-sm text-white">
@@ -374,10 +440,21 @@ const ShotScreen = () => {
                 </p>
               </div>
               <div className="flex flex-col items-center space-y-2 bg-primaryBrown rounded-2xl p-4">
-                <span className="text-white font-secondary font-semibold">{t('target4')}</span>
-                <TargetComponent impacts={extraImpacts} />
+                <span className="text-white font-secondary font-semibold">
+                  {mode === "Military" ? t('RS') : t('target3')}
+                </span>
+                <TargetComponent impacts={RSImpacts} />
                 <p className="mt-2 text-sm text-white">
-                {t('shoulderPrecision')} {calculatePrecision(extraImpacts)}%
+                {t('RSPrecision')} {calculatePrecision(RSImpacts)}%
+                </p>
+              </div>
+              <div className="flex flex-col items-center space-y-2 bg-primaryBrown rounded-2xl p-4">
+                <span className="text-white font-secondary font-semibold">
+                {mode === "Military" ? t('LS') : t('target4')}
+                </span>
+                <TargetComponent impacts={LSImpacts} />
+                <p className="mt-2 text-sm text-white">
+                {t('LSPrecision')} {calculatePrecision(LSImpacts)}%
                 </p>
               </div>
             </div>
@@ -393,6 +470,9 @@ const ShotScreen = () => {
             </div>
             <div className="flex-1">
               <InfoBox icon="📊" titleKey="shotStability" value="0%" />
+            </div>
+            <div className="flex-1">
+              <InfoBox icon="📊" titleKey="shotScore" value={score} />
             </div>
           </div>
         </div>
