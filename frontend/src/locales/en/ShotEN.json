@@ -21,5 +21,6 @@
     "LSPrecision": "Left shoulder precision",
     "shoulderPrecision": "Shoulder precision",
     "shotPrecision": "Shot precision",
-    "shotStability": "Shot stability"
+    "shotStability": "Shot stability",
+    "shotScore": "Session score"
 }

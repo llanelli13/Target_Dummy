@@ -21,5 +21,6 @@
     "LSPrecision": "Précision de l'épaule gauche",
     "shoulderPrecision": "Précision de l'épaule",
     "shotPrecision": "Précision du tir",
-    "shotStability": "Stabilité du tir"
+    "shotStability": "Stabilité du tir",
+    "shotScore": "Score de la session"
 }
