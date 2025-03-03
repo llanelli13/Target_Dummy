@@ -6,6 +6,7 @@ import InfoBox from "../components/InfoBox";
 import { useTranslation } from "react-i18next";
 import { useState, useRef, useEffect } from "react";
 import { createShotSequence } from "../api/shotSequenceAPI";
+import { createShotSequenceGLO } from "../api/shotSequenceGLOAPI";
 import { useMode } from "../context/ModeContext";
 
 const ShotScreen = () => {
@@ -460,14 +461,20 @@ const ShotScreen = () => {
       distance: 80,
       location: "Range B",
       sequence_data: sequenceData,
+      name: sessionData?.name,
+      mode: sessionData?.modeTir,
+      score: score
     };
 
     try {
-      await createShotSequence(shotSequenceData);
+      if (sessionData.modeTir === "Competitive") {
+        await createShotSequenceGLO(shotSequenceData);
+      } else {
+        await createShotSequence(shotSequenceData);
+      }
       endSession();
       setUnityUrl("");
       setHeadImpacts([]);
-      setHeartImpacts([]);
       setStomachImpacts([]);
       setRSImpacts([]);
       setLSImpacts([]);

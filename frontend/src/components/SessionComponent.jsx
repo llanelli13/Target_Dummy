@@ -12,6 +12,7 @@ const SessionComponent = ({ onClose }) => {
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleString());
   const [modeTir, setModeTir] = useState('Competitive');
   const [selectedGunId, setSelectedGunId] = useState('');
+  const [name, setName] = useState('');
 
   useEffect(() => {
     const fetchGuns = async () => {
@@ -56,7 +57,8 @@ const SessionComponent = ({ onClose }) => {
       modeTir,
       arme: selectedGun.name,
       idWeapon: selectedGun.id,
-      dateHeure: currentTime.toISOString()
+      dateHeure: currentTime.toISOString(),
+      name: name
     });
 
     onClose();
@@ -104,6 +106,20 @@ const SessionComponent = ({ onClose }) => {
                 ))}
               </select>
             </div>
+            {modeTir === 'Competitive' && (
+              <div className="w-1/3">
+                <label htmlFor="competitiveInput" className="block text-lg font-title font-semibold text-black mb-2">
+                  {t('competitive_input')}
+                </label>
+                <input
+                  type="text"
+                  id="competitiveInput"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="bg-primaryPale text-black font-title font-semibold rounded-full px-2 py-2 focus:outline-none w-full"
+                />
+              </div>
+            )}
           </div>
 
           <div className="absolute bottom-4 right-4">

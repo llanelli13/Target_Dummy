@@ -4,5 +4,6 @@
     "shot_mode": "Mode de tir :",
     "new_session": "Nouvelle session",
     "INT_shot": "Tir Competitif",
-    "STD_shot": "Tir libre"
+    "STD_shot": "Tir libre",
+    "competitive_input": "Entrez votre nom :"
 }

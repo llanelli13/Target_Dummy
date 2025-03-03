@@ -4,7 +4,7 @@ import { FaMedal, FaStar, FaRegStar } from "react-icons/fa";
 
 const Leaderboard = () => {
   const [leaderboardData, setLeaderboardData] = useState([]);
-  console.log(leaderboardData);
+  // console.log(leaderboardData);
 
   useEffect(() => {
     const fetchData = async () => {

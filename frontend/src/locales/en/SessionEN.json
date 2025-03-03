@@ -4,5 +4,6 @@
     "shot_mode": "Firing mode :",
     "new_session": "New session",
     "INT_shot": "Competitive shot",
-    "STD_shot": "Free shot"
+    "STD_shot": "Free shot",
+    "competitive_input": "Enter your name :"
 }
